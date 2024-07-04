@@ -16,18 +16,22 @@ class _FrontPageState extends State<FrontPage> {
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: LinearGradient(
-            colors: [
-              Colors.orange.shade900,
-              Colors.orange.shade800,
-              Colors.orange.shade400,
-            ],
+          // gradient: LinearGradient(
+          //   colors: [
+          //     Colors.orange.shade900,
+          //     Colors.orange.shade800,
+          //     Colors.orange.shade400,
+          //   ],
+          // ),
+          image: DecorationImage(
+            image: AssetImage("assets/images/cow.png"),
+            fit: BoxFit.fill,
           ),
         ),
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.20,
+              height: MediaQuery.of(context).size.height * 0.19,
             ),
             Expanded(
               child: Container(

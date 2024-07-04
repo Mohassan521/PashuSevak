@@ -9,8 +9,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
+    return Scaffold(
+      body: Column(
         // mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -59,9 +59,16 @@ class _LoginPageState extends State<LoginPage> {
           // ),
           MaterialButton(
             onPressed: () {},
-            child: Text("Login"),
+            child: Text(
+              "Log In",
+              style: TextStyle(
+                fontWeight: FontWeight.w500,
+                fontSize: 18,
+              ),
+            ),
             minWidth: double.infinity,
-            textColor: Colors.white,
+            padding: EdgeInsets.symmetric(vertical: 11),
+            textColor: Colors.black,
             color: Color(0xfff89255),
             shape:
                 RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
