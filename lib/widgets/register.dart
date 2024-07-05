@@ -3,10 +3,12 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pashusevak/Utils/utils.dart';
-import 'package:pashusevak/widgets/loginScreen.dart';
-import 'package:simple_icons/simple_icons.dart';
+// import 'package:pashusevak/widgets/loginScreen.dart';
+// import 'package:simple_icons/simple_icons.dart';
 
 class RegisterPage extends StatefulWidget {
+  const RegisterPage({super.key});
+
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
