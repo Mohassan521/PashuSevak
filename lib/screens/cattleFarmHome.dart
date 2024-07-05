@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/widgets/healthReports.dart';
+import 'package:pashusevak/widgets/nearbyConsultants.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
 
 class CattleFarmHomePage extends StatefulWidget {
@@ -160,7 +162,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                   ),
                 ),
                 SizedBox(
-                  height: 10,
+                  height: 20,
                 ),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23.5),
@@ -184,13 +186,52 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                     ],
                   ),
                 ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23.5),
+                  child: NearbyConsultants(),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23.5),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Health Reports",
+                        style: TextStyle(
+                            color: Colors.black,
+                            fontWeight: FontWeight.w700,
+                            fontSize: 16),
+                      ),
+                      Text(
+                        "See All",
+                        style: TextStyle(
+                            color: Color(0xfffe924b),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 23.5),
+                  child: HealthReports(),
+                ),
               ],
             ),
           ),
 
           // sell our service
           Center(
-            child: Text("data bohottttt h"),
+            child: Image.asset("assets/images/coming-soon.jpeg"),
           )
         ]),
       ),
