@@ -115,6 +115,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/trainingFacility.png",
                         name: "Training\nFacility",
+                        onTap: () {},
                       ),
                       SizedBox(
                         width: 10,
@@ -122,6 +123,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/emergencyCare.png",
                         name: "Emergency\nCare",
+                        onTap: () {},
                       ),
                       SizedBox(
                         width: 10,
@@ -129,6 +131,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/healthReport.png",
                         name: "Health\nReport",
+                        onTap: () {},
                       ),
                     ],
                   ),
@@ -143,6 +146,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/prescription.png",
                         name: "Prescription",
+                        onTap: () {},
                       ),
                       SizedBox(
                         width: 10,
@@ -150,6 +154,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/vetLabs.png",
                         name: "Vet Labs",
+                        onTap: () {},
                       ),
                       SizedBox(
                         width: 10,
@@ -157,6 +162,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/pharmacy.png",
                         name: "Pharmacy",
+                        onTap: () {},
                       ),
                     ],
                   ),

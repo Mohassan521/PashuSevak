@@ -13,6 +13,19 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        title: Column(
+          children: [
+            Text(
+              "Location",
+              style: TextStyle(fontSize: 14, color: Colors.black),
+            ),
+            Text(
+              "Gujrat, Ind",
+              style: TextStyle(fontSize: 16, color: Colors.black),
+            )
+          ],
+        ),
+        centerTitle: true,
         actions: [
           IconButton(
             onPressed: () {},
@@ -48,6 +61,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/prescription.png",
                   name: "Prescribe\nMedicine",
+                  onTap: () {},
                 ),
                 SizedBox(
                   width: 10,
@@ -55,6 +69,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/wallet.png",
                   name: "Wallet\nFacility",
+                  onTap: () {},
                 ),
                 SizedBox(
                   width: 10,
@@ -62,6 +77,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/emergencyCare.png",
                   name: "Livelihood\nHistory",
+                  onTap: () {},
                 ),
               ],
             ),
@@ -73,6 +89,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/app.png",
                   name: "Appointments",
+                  onTap: () {},
                 ),
                 SizedBox(
                   width: 10,
@@ -80,6 +97,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/marketplace.png",
                   name: "Marketplace",
+                  onTap: () {},
                 ),
                 SizedBox(
                   width: 10,
@@ -87,6 +105,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/pharmacy.png",
                   name: "Pharmacy",
+                  onTap: () {},
                 ),
               ],
             ),
