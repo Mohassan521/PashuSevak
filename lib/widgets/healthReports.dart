@@ -13,21 +13,50 @@ class HealthReports extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("July 4,2024"),
-            Text("Hepatitis - A"),
+            Text(
+              "July 4,2024",
+              style: TextStyle(
+                fontSize: 14,
+              ),
+            ),
+            SizedBox(
+              height: 2.5,
+            ),
+            Text(
+              "Hepatitis - A",
+              style: TextStyle(
+                fontSize: 20,
+                color: Color(0xffFE924B),
+                fontWeight: FontWeight.w800,
+              ),
+            ),
+            SizedBox(
+              height: 2.5,
+            ),
             Row(
               children: [
                 Image.asset("assets/images/petshop.png"),
                 SizedBox(
-                  width: 15,
+                  width: 9,
                 ),
-                Text("Cattle Name")
+                Text(
+                  "Cattle Name",
+                  style: TextStyle(
+                    fontSize: 14,
+                  ),
+                )
               ],
+            ),
+            SizedBox(
+              height: 3.5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
                   textColor: Colors.white,
                   color: Color(0xfffe924b),
                   onPressed: () {},
@@ -45,13 +74,16 @@ class HealthReports extends StatelessWidget {
                   ),
                 ),
                 MaterialButton(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(18),
+                  ),
                   textColor: Colors.white,
                   color: Color(0xfffe924b),
                   onPressed: () {},
                   child: Row(
                     children: [
                       Icon(
-                        Icons.arrow_circle_down,
+                        Icons.visibility,
                         color: Colors.white,
                       ),
                       SizedBox(
