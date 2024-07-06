@@ -1,10 +1,8 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pashusevak/firebase_options.dart';
-import 'package:pashusevak/screens/FrontPage.dart';
-import 'package:pashusevak/screens/cattleDetails.dart';
-import 'package:pashusevak/screens/cattleFarmHome.dart';
-import 'package:pashusevak/screens/doctorHome.dart';
+import 'package:pashusevak/screens/appointmentDetails.dart';
+import 'package:pashusevak/screens/emergencyAppointment.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,7 +23,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const DoctorHomePage(),
+      home: const EmergencyAppointment(),
     );
   }
 }
