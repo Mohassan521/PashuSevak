@@ -1,7 +1,14 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pashusevak/firebase_options.dart';
+import 'package:pashusevak/screens/FrontPage.dart';
+import 'package:pashusevak/screens/PashuSevakScreens/LivestockDetails.dart';
+import 'package:pashusevak/screens/PashuSevakScreens/basicDetails.dart';
+import 'package:pashusevak/screens/PashuSevakScreens/cattleDetails.dart';
+import 'package:pashusevak/screens/PashuSevakScreens/profileAndSettings.dart';
 import 'package:pashusevak/screens/appointmentDetails.dart';
+import 'package:pashusevak/screens/cattleDetails.dart';
+import 'package:pashusevak/screens/cattleFarmHome.dart';
 import 'package:pashusevak/screens/doctorHome.dart';
 import 'package:pashusevak/screens/emergencyAppointment.dart';
 import 'package:pashusevak/screens/prescriptionAndReport.dart';
@@ -25,7 +32,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const PrescriptionAndReport(),
+      home: const DoctorHomePage(),
     );
   }
 }

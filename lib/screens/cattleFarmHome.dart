@@ -16,6 +16,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        backgroundColor: Colors.white,
         appBar: AppBar(
           backgroundColor: Color(0xfffe924b),
           actions: [
@@ -51,6 +52,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                         labelStyle: TextStyle(fontWeight: FontWeight.bold),
                         unselectedLabelColor: Colors.black,
                         indicatorSize: TabBarIndicatorSize.tab,
+                        // labelPadding: EdgeInsets.symmetric(horizontal: 10),
                         indicator: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(25),
@@ -111,22 +113,17 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ServiceTiles(
                         image: "assets/images/trainingFacility.png",
                         name: "Training\nFacility",
                         onTap: () {},
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
                       ServiceTiles(
                         image: "assets/images/emergencyCare.png",
                         name: "Emergency\nCare",
                         onTap: () {},
-                      ),
-                      SizedBox(
-                        width: 10,
                       ),
                       ServiceTiles(
                         image: "assets/images/healthReport.png",
@@ -142,22 +139,17 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ServiceTiles(
                         image: "assets/images/prescription.png",
                         name: "Prescription",
                         onTap: () {},
                       ),
-                      SizedBox(
-                        width: 10,
-                      ),
                       ServiceTiles(
                         image: "assets/images/vetLabs.png",
                         name: "Vet Labs",
                         onTap: () {},
-                      ),
-                      SizedBox(
-                        width: 10,
                       ),
                       ServiceTiles(
                         image: "assets/images/pharmacy.png",

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/screens/prescriptionAndReport.dart';
+import 'package:pashusevak/widgets/doctorSideDrawer.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
 
 class DoctorHomePage extends StatefulWidget {
@@ -12,6 +14,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: DoctorSideDrawer(),
       appBar: AppBar(
         title: Column(
           children: [
@@ -57,22 +60,24 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               height: 5,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ServiceTiles(
                   image: "assets/images/prescription.png",
                   name: "Prescribe\nMedicine",
-                  onTap: () {},
-                ),
-                SizedBox(
-                  width: 10,
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => PrescriptionAndReport(),
+                      ),
+                    );
+                  },
                 ),
                 ServiceTiles(
                   image: "assets/images/wallet.png",
                   name: "Wallet\nFacility",
                   onTap: () {},
-                ),
-                SizedBox(
-                  width: 10,
                 ),
                 ServiceTiles(
                   image: "assets/images/emergencyCare.png",
@@ -85,22 +90,17 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               height: 8,
             ),
             Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ServiceTiles(
                   image: "assets/images/app.png",
                   name: "Appointments",
                   onTap: () {},
                 ),
-                SizedBox(
-                  width: 10,
-                ),
                 ServiceTiles(
                   image: "assets/images/marketplace.png",
                   name: "Marketplace",
                   onTap: () {},
-                ),
-                SizedBox(
-                  width: 10,
                 ),
                 ServiceTiles(
                   image: "assets/images/pharmacy.png",
