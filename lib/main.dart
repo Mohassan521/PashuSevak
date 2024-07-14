@@ -7,11 +7,14 @@ import 'package:pashusevak/screens/PashuSevakScreens/basicDetails.dart';
 import 'package:pashusevak/screens/PashuSevakScreens/cattleDetails.dart';
 import 'package:pashusevak/screens/PashuSevakScreens/profileAndSettings.dart';
 import 'package:pashusevak/screens/appointmentDetails.dart';
+import 'package:pashusevak/screens/carouselPage.dart';
 import 'package:pashusevak/screens/cattleDetails.dart';
 import 'package:pashusevak/screens/cattleFarmHome.dart';
 import 'package:pashusevak/screens/doctorHome.dart';
 import 'package:pashusevak/screens/emergencyAppointment.dart';
 import 'package:pashusevak/screens/prescriptionAndReport.dart';
+import 'package:pashusevak/screens/selectLanguage.dart';
+import 'package:pashusevak/screens/splashScreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -32,7 +35,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const DoctorHomePage(),
+      home: SplashScreen(),
     );
   }
 }

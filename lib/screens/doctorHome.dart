@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/screens/appointmentDetails.dart';
+import 'package:pashusevak/screens/marketPlace.dart';
 import 'package:pashusevak/screens/prescriptionAndReport.dart';
+import 'package:pashusevak/screens/walletScreen.dart';
 import 'package:pashusevak/widgets/doctorSideDrawer.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
 
@@ -77,7 +80,12 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/wallet.png",
                   name: "Wallet\nFacility",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => WalletScreen()));
+                  },
                 ),
                 ServiceTiles(
                   image: "assets/images/emergencyCare.png",
@@ -95,12 +103,22 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                 ServiceTiles(
                   image: "assets/images/app.png",
                   name: "Appointments",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => AppointmentDetailsPage(),
+                      ),
+                    );
+                  },
                 ),
                 ServiceTiles(
                   image: "assets/images/marketplace.png",
                   name: "Marketplace",
-                  onTap: () {},
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => MarketPlace()));
+                  },
                 ),
                 ServiceTiles(
                   image: "assets/images/pharmacy.png",

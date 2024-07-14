@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pashusevak/Utils/utils.dart';
 // import 'package:pashusevak/widgets/loginScreen.dart';
 // import 'package:simple_icons/simple_icons.dart';
@@ -20,32 +19,32 @@ class _RegisterPageState extends State<RegisterPage> {
   bool passwordVisibility = false;
   bool confirmPasswordVisibility = false;
 
-  final _auth = FirebaseAuth.instance;
+  // final _auth = FirebaseAuth.instance;
 
-  void signUp(
-      String email, String password, String role, String displayName) async {
-    await _auth
-        .createUserWithEmailAndPassword(email: email, password: password)
-        .then((value) => {postDetailsToFirestore(email, role, displayName)})
-        .catchError((e) {
-      print(e.toString());
-    });
-  }
+  // void signUp(
+  //     String email, String password, String role, String displayName) async {
+  //   await _auth
+  //       .createUserWithEmailAndPassword(email: email, password: password)
+  //       .then((value) => {postDetailsToFirestore(email, role, displayName)})
+  //       .catchError((e) {
+  //     print(e.toString());
+  //   });
+  // }
 
-  postDetailsToFirestore(String email, String rool, String display_name) async {
-    FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
-    var user = _auth.currentUser;
-    CollectionReference ref = firebaseFirestore.collection('registeredUsers');
-    ref.doc(user!.uid).set({
-      'email': emailController.text,
-      'role': role,
-      'display_name': display_name
-    });
-    Utils().toastMessage("User Registered");
+  // postDetailsToFirestore(String email, String rool, String display_name) async {
+  //   FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+  //   var user = _auth.currentUser;
+  //   CollectionReference ref = firebaseFirestore.collection('registeredUsers');
+  //   ref.doc(user!.uid).set({
+  //     'email': emailController.text,
+  //     'role': role,
+  //     'display_name': display_name
+  //   });
+  //   Utils().toastMessage("User Registered");
 
-    // Navigator.pushReplacement(
-    //     context, MaterialPageRoute(builder: (context) => LoginPage()));
-  }
+  //   // Navigator.pushReplacement(
+  //   //     context, MaterialPageRoute(builder: (context) => LoginPage()));
+  // }
 
   var role = "Farmer";
 
@@ -73,7 +72,7 @@ class _RegisterPageState extends State<RegisterPage> {
               TextFormField(
                 controller: displayName,
                 decoration: InputDecoration(
-                  labelText: 'Full Name',
+                  labelText: 'Phone Number',
                   border: OutlineInputBorder(),
                 ),
               ),
@@ -86,54 +85,6 @@ class _RegisterPageState extends State<RegisterPage> {
                 ),
               ),
               SizedBox(height: 10),
-              TextFormField(
-                obscureText: true,
-                controller: passwordController,
-                decoration: InputDecoration(
-                  labelText: 'Password',
-                  border: OutlineInputBorder(),
-                  suffixIcon: Icon(Icons.visibility_off),
-                ),
-              ),
-              SizedBox(height: 10),
-              Container(
-                // height: MediaQuery.sizeOf(context).height * 0.055,
-                padding: EdgeInsets.only(left: 9),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.5),
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
-                ),
-                child: DropdownButton<String>(
-                  isExpanded: true,
-                  value: role,
-                  onChanged: (String? newValue) {
-                    setState(() {
-                      // entranceDoorValue = newValue ?? entranceDoorValue;
-                      role = newValue ?? role;
-                    });
-                  },
-                  items: [
-                    DropdownMenuItem<String>(
-                        value: 'Farmer',
-                        child: Text(
-                          'CattleFarmer',
-                          style: TextStyle(fontSize: 12),
-                        )),
-                    DropdownMenuItem<String>(
-                        value: 'Doctor',
-                        child: Text('Doctor', style: TextStyle(fontSize: 12))),
-                    DropdownMenuItem<String>(
-                        value: 'Pashusevak',
-                        child: Text('Pashu Sevak',
-                            style: TextStyle(fontSize: 12))),
-                  ],
-                ),
-              ),
-
               SizedBox(
                 height: 15,
               ),
@@ -149,15 +100,7 @@ class _RegisterPageState extends State<RegisterPage> {
             ],
           ),
           MaterialButton(
-            onPressed: () {
-              if (emailController.text.isNotEmpty &&
-                  displayName.text.isNotEmpty &&
-                  role.isNotEmpty &&
-                  passwordController.text.isNotEmpty) {
-                signUp(emailController.text, passwordController.text, role,
-                    displayName.text);
-              }
-            },
+            onPressed: () {},
             child: Text("Register"),
             minWidth: double.infinity,
             textColor: Colors.white,

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:pashusevak/screens/doctorHome.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -27,30 +27,14 @@ class _LoginPageState extends State<LoginPage> {
                 'Sign in to get community based Veterinary care service provider.',
                 style: TextStyle(fontSize: 16),
               ),
-              SizedBox(height: 25),
-              TextFormField(
-                decoration: InputDecoration(
-                  labelText: 'Email Address',
-                  border: OutlineInputBorder(),
-                ),
-              ),
               SizedBox(height: 20),
               TextFormField(
                 obscureText: true,
                 decoration: InputDecoration(
-                  labelText: 'Password',
+                  labelText: 'Phone Number',
                   border: OutlineInputBorder(),
                   suffixIcon: Icon(Icons.visibility_off),
                 ),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.end,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: Text('Forgot Password?'),
-                  ),
-                ],
               ),
               // ElevatedButton(
               //   onPressed: () {},
@@ -63,7 +47,14 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           MaterialButton(
-            onPressed: () {},
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => DoctorHomePage(),
+                ),
+              );
+            },
             child: Text(
               "Log In",
               style: TextStyle(

@@ -8,7 +8,11 @@ class AppointmentDetailsPage extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: InkWell(onTap: () {}, child: Icon(Icons.arrow_back)),
+        leading: InkWell(
+            onTap: () {
+              Navigator.pop(context);
+            },
+            child: Icon(Icons.arrow_back)),
         title: Text("Appointment Details"),
         centerTitle: true,
       ),
