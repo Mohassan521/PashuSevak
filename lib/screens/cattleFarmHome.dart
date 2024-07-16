@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/screens/emergencyCare.dart';
+import 'package:pashusevak/screens/healthReports.dart';
+import 'package:pashusevak/screens/pharmacyForFarmers.dart';
+import 'package:pashusevak/screens/prescribeCattleFarmer.dart';
 import 'package:pashusevak/screens/trainingFacility.dart';
+import 'package:pashusevak/screens/vetLabs.dart';
 import 'package:pashusevak/widgets/farmerSideDrawer.dart';
 import 'package:pashusevak/widgets/healthReports.dart';
 import 'package:pashusevak/widgets/nearbyConsultants.dart';
@@ -134,12 +139,24 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/emergencyCare.png",
                         name: "Emergency\nCare",
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => EmergencyCare()));
+                        },
                       ),
                       ServiceTiles(
                         image: "assets/images/healthReport.png",
                         name: "Health\nReport",
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => HealthReportsPage(),
+                            ),
+                          );
+                        },
                       ),
                     ],
                   ),
@@ -155,17 +172,37 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/prescription.png",
                         name: "Prescription",
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  PrescriptionAndReportForFarmer(),
+                            ),
+                          );
+                        },
                       ),
                       ServiceTiles(
                         image: "assets/images/vetLabs.png",
                         name: "Vet Labs",
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => VetLabs(),
+                            ),
+                          );
+                        },
                       ),
                       ServiceTiles(
                         image: "assets/images/pharmacy.png",
                         name: "Pharmacy",
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => PharmacyForFarmers()));
+                        },
                       ),
                     ],
                   ),
