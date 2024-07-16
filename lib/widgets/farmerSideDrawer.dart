@@ -1,13 +1,33 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:pashusevak/screens/FrontPage.dart';
-import 'package:pashusevak/services/apiServices.dart';
 import 'package:pashusevak/widgets/loginScreen.dart';
 
-class DoctorSideDrawer extends StatelessWidget {
-  const DoctorSideDrawer({super.key});
+class FarmerSideDrawer extends StatelessWidget {
+  const FarmerSideDrawer({super.key});
 
   @override
   Widget build(BuildContext context) {
+    Future<void> logout() async {
+      final String apiUrl = 'http://43.205.23.114/api/method/logout';
+
+      try {
+        final response = await http.get(
+          Uri.parse(apiUrl),
+        );
+
+        if (response.statusCode == 200) {
+          print('Logout responce: ${response.body}');
+          print('Logout Successful');
+        } else {
+          print('Logout Error: ${response.statusCode}');
+          print('Logout Response: ${response.body}');
+        }
+      } catch (error) {
+        print('Error during logout: $error');
+      }
+    }
+
     return SafeArea(
       child: Drawer(
         shape: RoundedRectangleBorder(
@@ -31,7 +51,7 @@ class DoctorSideDrawer extends StatelessWidget {
                     height: 12,
                   ),
                   Text(
-                    "Doctor",
+                    "Farmer",
                     style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 20,
@@ -150,9 +170,13 @@ class DoctorSideDrawer extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  NetworkApiServices().logout();
-                  Navigator.pushReplacement(context,
-                      MaterialPageRoute(builder: (context) => FrontPage()));
+                  logout();
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => FrontPage(),
+                    ),
+                  );
                 },
                 child: Row(
                   children: [

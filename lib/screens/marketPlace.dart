@@ -10,10 +10,10 @@ class MarketPlace extends StatefulWidget {
 
 class _MarketPlaceState extends State<MarketPlace> {
   List animalDetails = [
-    ["assets/images/cow1.png", "Breed Name . Vaccinated", "Rs.80,000"],
-    ["assets/images/cow2.png", "Breed Name . Vaccinated", "Rs.80,000"],
-    ["assets/images/cow1.png", "Breed Name . Vaccinated", "Rs.80,000"],
-    ["assets/images/cow2.png", "Breed Name . Vaccinated", "Rs.80,000"],
+    ["assets/images/cow1.png", "Breed Name\n(Vaccinated)", "Rs.80,000"],
+    ["assets/images/cow2.png", "Breed Name\n(Vaccinated)", "Rs.80,000"],
+    ["assets/images/cow1.png", "Breed Name\n(Vaccinated)", "Rs.80,000"],
+    ["assets/images/cow2.png", "Breed Name\n(Vaccinated)", "Rs.80,000"],
   ];
 
   @override

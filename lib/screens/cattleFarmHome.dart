@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/screens/trainingFacility.dart';
+import 'package:pashusevak/widgets/farmerSideDrawer.dart';
 import 'package:pashusevak/widgets/healthReports.dart';
 import 'package:pashusevak/widgets/nearbyConsultants.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
@@ -16,8 +18,10 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
     return DefaultTabController(
       length: 2,
       child: Scaffold(
+        drawer: FarmerSideDrawer(),
         backgroundColor: Colors.white,
         appBar: AppBar(
+          iconTheme: IconThemeData(color: Colors.white),
           backgroundColor: Color(0xfffe924b),
           actions: [
             IconButton(
@@ -118,7 +122,14 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                       ServiceTiles(
                         image: "assets/images/trainingFacility.png",
                         name: "Training\nFacility",
-                        onTap: () {},
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => TrainingFacility(),
+                            ),
+                          );
+                        },
                       ),
                       ServiceTiles(
                         image: "assets/images/emergencyCare.png",

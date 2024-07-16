@@ -10,7 +10,7 @@ class WalletScreen extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.orange,
         title: Text(
-          "Hi, Doctor",
+          "Hi, Pashusevak",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -80,7 +80,9 @@ class WalletScreen extends StatelessWidget {
                 child: Center(child: Text("Transfer Money")),
                 color: Colors.white,
                 textColor: Colors.orange,
-                padding: EdgeInsets.symmetric(horizontal: 52, vertical: 15),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.sizeOf(context).width * 0.1,
+                    vertical: 15),
               ),
               SizedBox(
                 width: 8,
@@ -93,7 +95,9 @@ class WalletScreen extends StatelessWidget {
                 child: Text("Add Money"),
                 color: Colors.orange,
                 textColor: Colors.white,
-                padding: EdgeInsets.symmetric(horizontal: 52, vertical: 15),
+                padding: EdgeInsets.symmetric(
+                    horizontal: MediaQuery.sizeOf(context).width * 0.1,
+                    vertical: 15),
               ),
             ],
           ),

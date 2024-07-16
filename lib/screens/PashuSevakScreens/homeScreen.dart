@@ -7,14 +7,14 @@ import 'package:pashusevak/screens/walletScreen.dart';
 import 'package:pashusevak/widgets/doctorSideDrawer.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
 
-class DoctorHomePage extends StatefulWidget {
-  const DoctorHomePage({super.key});
+class PashuSevakHomePage extends StatefulWidget {
+  const PashuSevakHomePage({super.key});
 
   @override
-  State<DoctorHomePage> createState() => _DoctorHomePageState();
+  State<PashuSevakHomePage> createState() => _PashuSevakHomePageState();
 }
 
-class _DoctorHomePageState extends State<DoctorHomePage> {
+class _PashuSevakHomePageState extends State<PashuSevakHomePage> {
   Locale _locale = Locale('hi', 'IN');
 
   void _changeLanguage(Locale locale) {
@@ -85,6 +85,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ServiceTiles(
+                  color: Color(0xffFFDBBB),
                   image: "assets/images/prescription.png",
                   name: Localization.of(context)!
                       .translate('prescribe_medicine')!,
@@ -98,6 +99,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                   },
                 ),
                 ServiceTiles(
+                  color: Color(0xffFFDBBB),
                   image: "assets/images/wallet.png",
                   name: Localization.of(context)!.translate('wallet_facility')!,
                   onTap: () {
@@ -108,6 +110,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                   },
                 ),
                 ServiceTiles(
+                  color: Color(0xffFFDBBB),
                   image: "assets/images/emergencyCare.png",
                   name: Localization.of(context)!
                       .translate('livelihood_history')!,
@@ -122,8 +125,9 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ServiceTiles(
+                  color: Color(0xffFFDBBB),
                   image: "assets/images/app.png",
-                  name: Localization.of(context)!.translate('appointments')!,
+                  name: "Appointments",
                   onTap: () {
                     Navigator.push(
                       context,
@@ -134,16 +138,18 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                   },
                 ),
                 ServiceTiles(
+                  color: Color(0xffFFDBBB),
                   image: "assets/images/marketplace.png",
-                  name: Localization.of(context)!.translate('marketplace')!,
+                  name: "Inventory",
                   onTap: () {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => MarketPlace()));
                   },
                 ),
                 ServiceTiles(
+                  color: Color(0xffFFDBBB),
                   image: "assets/images/pharmacy.png",
-                  name: Localization.of(context)!.translate('pharmacy')!,
+                  name: "Lab Sample Collection",
                   onTap: () {},
                 ),
               ],
