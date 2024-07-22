@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/screens/cattleListingForm.dart';
 import 'package:pashusevak/widgets/marketPlaceItems.dart';
 
 class MarketPlace extends StatefulWidget {
@@ -34,7 +35,14 @@ class _MarketPlaceState extends State<MarketPlace> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => CattleListingForm(),
+                  ),
+                );
+              },
               color: Colors.orange,
               textColor: Colors.white,
               child: Text("List your Cattle"),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/services/apiServices.dart';
 
 class WalletScreen extends StatelessWidget {
-  const WalletScreen({super.key});
+  final String? sid;
+  const WalletScreen({super.key, this.sid});
 
   @override
   Widget build(BuildContext context) {
@@ -10,7 +12,7 @@ class WalletScreen extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.orange,
         title: Text(
-          "Hi, Pashusevak",
+          "Hi, Doctor",
           style: TextStyle(
             color: Colors.white,
           ),
@@ -51,14 +53,35 @@ class WalletScreen extends StatelessWidget {
                     fontSize: 21,
                   ),
                 ),
-                Text(
-                  "Rs 10,000",
-                  style: TextStyle(
-                    letterSpacing: 1.5,
-                    color: Colors.white,
-                    fontSize: 32,
-                    fontWeight: FontWeight.bold,
-                  ),
+                FutureBuilder<double>(
+                  future: NetworkApiServices().getWalletBalance(sid!),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return Text(
+                        "Data is being loaded",
+                        style: TextStyle(
+                          letterSpacing: 1.5,
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Text('Error: ${snapshot.error}');
+                    } else if (snapshot.hasData) {
+                      return Text(
+                        '${snapshot.data}',
+                        style: TextStyle(
+                          letterSpacing: 1.5,
+                          color: Colors.white,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      );
+                    } else {
+                      return Text('No data available');
+                    }
+                  },
                 ),
               ],
             ),

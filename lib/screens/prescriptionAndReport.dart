@@ -8,11 +8,34 @@ class PrescriptionAndReport extends StatefulWidget {
 }
 
 class _PrescriptionAndReportState extends State<PrescriptionAndReport> {
+  List<Widget> _inputFields = [];
   int selectedIndex = 0;
 
   void onSelectTab(int index) {
     setState(() {
       selectedIndex = index;
+    });
+  }
+
+  void _addNewInputField() {
+    setState(() {
+      _inputFields.add(
+        Padding(
+          padding: const EdgeInsets.symmetric(vertical: 5.0),
+          child: TextFormField(
+            decoration: InputDecoration(
+              hintText: "e.g Panadol",
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(10),
+                borderSide: BorderSide(
+                  color: Colors.black,
+                  width: 1.25,
+                ),
+              ),
+            ),
+          ),
+        ),
+      );
     });
   }
 
@@ -53,26 +76,20 @@ class _PrescriptionAndReportState extends State<PrescriptionAndReport> {
               SizedBox(
                 height: 5,
               ),
-              TextFormField(
-                decoration: InputDecoration(
-                    hintText: "e.g Panadol",
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: BorderSide(
-                        color: Colors.black,
-                        width: 1.25,
-                      ),
-                    )),
-              ),
+              ..._inputFields,
               SizedBox(
                 height: 5,
               ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text(
-                    "Add More +",
-                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                  InkWell(
+                    onTap: _addNewInputField,
+                    child: Text(
+                      "Add More +",
+                      style:
+                          TextStyle(fontSize: 14, fontWeight: FontWeight.w700),
+                    ),
                   ),
                 ],
               ),

@@ -8,7 +8,8 @@ import 'package:pashusevak/widgets/doctorSideDrawer.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
 
 class DoctorHomePage extends StatefulWidget {
-  const DoctorHomePage({super.key});
+  final String sid;
+  const DoctorHomePage({super.key, required this.sid});
 
   @override
   State<DoctorHomePage> createState() => _DoctorHomePageState();
@@ -27,6 +28,8 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
 
   @override
   Widget build(BuildContext context) {
+    print("SID in Doctor home page: ${widget.sid}");
+
     return Scaffold(
       drawer: DoctorSideDrawer(),
       appBar: AppBar(
@@ -104,7 +107,9 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => WalletScreen()));
+                            builder: (context) => WalletScreen(
+                                  sid: widget.sid,
+                                )));
                   },
                 ),
                 ServiceTiles(

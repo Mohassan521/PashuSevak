@@ -45,13 +45,14 @@ class _FrontPageState extends State<FrontPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: DefaultTabController(
-                    length: 2,
+                    length: 3,
                     child: Column(
                       children: [
                         TabBar(
                           tabs: [
                             Tab(text: 'Sign In'),
-                            Tab(text: 'Sign Up'),
+                            Tab(text: 'Pashusevak Sign Up'),
+                            Tab(text: 'Doctor Sign Up'),
                           ],
                           labelColor: Colors.black,
                           labelStyle: TextStyle(fontSize: 17.5),
@@ -62,7 +63,10 @@ class _FrontPageState extends State<FrontPage> {
                           child: TabBarView(
                             children: [
                               LoginPage(),
-                              RegisterPage()
+                              RegisterPage(),
+                              Center(
+                                child: Text("hello"),
+                              )
                               // SignInForm(),
                               // SignUpForm(),
                             ],

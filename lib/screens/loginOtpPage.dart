@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pashusevak/screens/FrontPage.dart';
 import 'package:pashusevak/screens/cattleFarmHome.dart';
 import 'package:pashusevak/screens/doctorHome.dart';
 import 'package:pashusevak/widgets/loginScreen.dart';
@@ -85,11 +86,6 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
   Future<void> loginWithOTP() async {
     String apiUrl = 'http://43.205.23.114/api/method/oymom.api.login_with_otp';
 
-    if (widget.mobileNumber.isEmpty) {
-      print('Error: Mobile number is empty.');
-      return;
-    }
-
     Map<String, String> requestBody = {
       'mobile_no': widget.mobileNumber,
       'otp': widget.generatedOTP,
@@ -106,94 +102,48 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
       print('Response Body: ${response.body}');
       print(response.headers);
 
-      String fullName = responseBody['full_name'];
-      print(fullName);
-
       if (response.statusCode == 200) {
         String loginRole = responseBody['login_user'];
 
-        if (loginRole == 'Doctor') {
-          // Open Doctor home
-
+        if (loginRole == 'Doctor' || loginRole == 'Farmer') {
           await fetchLoggedUserDetails();
 
           String setCookieHeader = response.headers['set-cookie'] ?? '';
           cookieHeader = {'Cookie': setCookieHeader};
           OtpManagerr.cookieHeader1 = {'Cookie': setCookieHeader};
+          print("print cookie header: $setCookieHeader");
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('cookie', setCookieHeader);
-          Navigator.pop(context);
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const DoctorHomePage();
-          }));
-        } else if (loginRole == 'Farmer') {
-          // Open Farmers home
 
-          await fetchLoggedUserDetails();
-          String setCookieHeader = response.headers['set-cookie'] ?? '';
-          cookieHeader = {'Cookie': setCookieHeader};
-          OtpManagerr.cookieHeader1 = {'Cookie': setCookieHeader};
-          SharedPreferences prefs = await SharedPreferences.getInstance();
-          prefs.setString('cookie', setCookieHeader);
-          Navigator.pop(context);
-          Navigator.pop(context);
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return const CattleFarmHomePage();
-          }));
+          // Extract and save SID
+          String? sid = _extractSidFromCookies(setCookieHeader);
+          if (sid != null) {
+            await prefs.setString('sid', sid);
+
+            print('SID stored: $sid');
+          }
+          await prefs.setString("role", loginRole);
+          String role = prefs.getString("role")!;
+          print("role: $role");
+          String storedSid = prefs.getString('sid') ?? "";
+
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                if (loginRole == 'Doctor') {
+                  return DoctorHomePage(
+                    sid: storedSid,
+                  );
+                } else if (loginRole == 'Farmer') {
+                  return const CattleFarmHomePage();
+                } else {
+                  return FrontPage();
+                }
+              },
+            ),
+          );
         } else {
           showUserNotFoundError();
-
-          Future<void> logout() async {
-            final String apiUrl = 'http://43.205.23.114/api/method/logout';
-
-            try {
-              final response = await http.get(
-                Uri.parse(apiUrl),
-              );
-
-              if (response.statusCode == 200) {
-                print('Logout responce: ${response.body}');
-                print('Logout Successful');
-              } else {
-                print('Logout Error: ${response.statusCode}');
-                print('Logout Response: ${response.body}');
-              }
-            } catch (error) {
-              print('Error during logout: $error');
-            }
-          }
-
-          logout();
-          void logoutt() async {
-            SharedPreferences prefs = await SharedPreferences.getInstance();
-            await prefs.remove('isLoggedIn');
-            // Additional cleanup logic if needed
-          }
-
-          Future<void> logouttt() async {
-            try {
-              // Clear cookies from shared preferences
-              SharedPreferences prefs = await SharedPreferences.getInstance();
-              prefs.remove('cookie');
-
-              // Navigate to the login screen or perform other actions after logout
-              // Example: Navigator.pushReplacementNamed(context, '/login');
-            } catch (error) {
-              print('Error during logout: $error');
-            }
-          }
-
-          logouttt();
-          logoutt();
-          // Close the drawer
-          Navigator.pop(context);
-
-          // Clear the navigation stack and navigate to the login page
-          Navigator.of(context).pushAndRemoveUntil(
-            MaterialPageRoute(builder: (context) => LoginPage()),
-            (Route<dynamic> route) => false,
-          );
         }
       } else {
         showErrorMessage();
@@ -203,6 +153,16 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
       print('Error during API call: $error');
       showErrorMessage();
     }
+  }
+
+  String? _extractSidFromCookies(String cookies) {
+    final cookieList = cookies.split('; ');
+    for (var cookie in cookieList) {
+      if (cookie.startsWith('sid=')) {
+        return cookie.substring(4); // remove 'sid=' prefix
+      }
+    }
+    return null; // sid not found
   }
 
   void showUserNotFoundError() {

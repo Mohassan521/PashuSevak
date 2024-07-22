@@ -1,10 +1,13 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:pashusevak/models/bannerList.dart';
 import 'package:pashusevak/screens/emergencyCare.dart';
 import 'package:pashusevak/screens/healthReports.dart';
 import 'package:pashusevak/screens/pharmacyForFarmers.dart';
 import 'package:pashusevak/screens/prescribeCattleFarmer.dart';
 import 'package:pashusevak/screens/trainingFacility.dart';
 import 'package:pashusevak/screens/vetLabs.dart';
+import 'package:pashusevak/services/apiServices.dart';
 import 'package:pashusevak/widgets/farmerSideDrawer.dart';
 import 'package:pashusevak/widgets/healthReports.dart';
 import 'package:pashusevak/widgets/nearbyConsultants.dart';
@@ -101,8 +104,37 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
               children: [
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 23.5, vertical: 12),
-                  child: Image.asset("assets/images/carouselPic1.png"),
+                  child: FutureBuilder<List<Message>>(
+                    future: NetworkApiServices().fetchBanners(),
+                    builder: (context, snapshot) {
+                      return CarouselSlider(
+                          items: snapshot.data?.map((banner) {
+                            return Builder(
+                              builder: (BuildContext context) {
+                                return Container(
+                                  width: MediaQuery.of(context).size.width,
+                                  margin: EdgeInsets.symmetric(horizontal: 5.0),
+                                  child: Image.network(
+                                    "http://43.205.23.114/${banner.banner}",
+                                    fit: BoxFit.cover,
+                                  ),
+                                  // child: Text(banner.sequence.toString()),
+                                );
+                              },
+                            );
+                          }).toList(),
+                          options: CarouselOptions(
+                            viewportFraction: 1,
+                            autoPlay: true,
+                          ));
+                    },
+                  ),
                 ),
+
+                // Padding(
+                //   padding: EdgeInsets.symmetric(horizontal: 23.5, vertical: 12),
+                //   child: Image.asset("assets/images/carouselPic1.png"),
+                // ),
                 SizedBox(
                   height: 15,
                 ),
@@ -268,7 +300,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                   height: 10,
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 23.5),
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: HealthReports(),
                 ),
               ],
