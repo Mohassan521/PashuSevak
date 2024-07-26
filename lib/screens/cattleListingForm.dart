@@ -1,16 +1,61 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:pashusevak/models/cattleListModel.dart';
+import 'package:pashusevak/models/getBreedOfCattle.dart';
+import 'package:pashusevak/services/apiServices.dart';
+import 'package:http/http.dart' as http;
 
 class CattleListingForm extends StatefulWidget {
-  const CattleListingForm({super.key});
+  final String? sid;
+  const CattleListingForm({super.key, this.sid});
 
   @override
   State<CattleListingForm> createState() => _CattleListingFormState();
 }
 
 class _CattleListingFormState extends State<CattleListingForm> {
+  Future<List<GetBreedOfCattle>> getBreedOfCattle() async {
+    String url =
+        "http://43.205.23.114/api/method/oymom.api.get_breed_of_cattle";
+
+    var request = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json',
+      'Cookie': 'sid=${widget.sid}',
+    });
+
+    if (request.statusCode == 200) {
+      List<dynamic> body = jsonDecode(request.body)['message'];
+      List<GetBreedOfCattle> breeds =
+          body.map((dynamic item) => GetBreedOfCattle.fromJson(item)).toList();
+      return breeds;
+    } else {
+      throw Exception('Failed to load cattle breeds');
+    }
+  }
+
+  List<File?> _selectedFiles = [];
+
+  Future<void> _pickFiles() async {
+    // Use FilePicker to select multiple files
+    FilePickerResult? result = await FilePicker.platform.pickFiles(
+      type: FileType.custom,
+      allowedExtensions: ['jpg', 'pdf', 'doc'],
+    );
+
+    if (result != null) {
+      _selectedFiles = result.paths.map((path) => File(path!)).toList();
+      setState(() {});
+    } else {
+      // User canceled the picker
+      print('File selection canceled.');
+    }
+  }
+
   String productCategory = "";
-  String cattleType = "";
+  String? cattleType;
   TextEditingController cattleBreed = TextEditingController();
   TextEditingController age = TextEditingController();
   String isOnHeat = "";
@@ -54,9 +99,9 @@ class _CattleListingFormState extends State<CattleListingForm> {
                   isExpanded: true,
                   value: productCategory,
                   onChanged: (String? newValue) {
-                    // setState(() {
-                    //   entranceDoorValue = newValue ?? entranceDoorValue;
-                    // });
+                    setState(() {
+                      productCategory = newValue ?? productCategory;
+                    });
                   },
                   items: [
                     DropdownMenuItem<String>(
@@ -98,48 +143,52 @@ class _CattleListingFormState extends State<CattleListingForm> {
               SizedBox(
                 height: 5,
               ),
-              Container(
-                height: MediaQuery.sizeOf(context).height * 0.055,
-                padding: EdgeInsets.only(left: 9),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(5.5),
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
-                ),
-                child: DropdownButton<String>(
-                  alignment: Alignment.center,
-                  isExpanded: true,
-                  value: cattleType,
-                  onChanged: (String? newValue) {
-                    // setState(() {
-                    //   entranceDoorValue = newValue ?? entranceDoorValue;
-                    // });
-                  },
-                  items: [
-                    DropdownMenuItem<String>(
-                        value: '',
-                        child: Center(
-                            child: Text(
-                          'Select your Cattle',
-                          style: TextStyle(fontSize: 12),
-                        ))),
-                    DropdownMenuItem<String>(
-                        value: 'Cattel 1',
-                        child: Center(
-                            child: Text(
-                          'Cattle 1',
-                          style: TextStyle(fontSize: 12),
-                        ))),
-                    DropdownMenuItem<String>(
-                        value: 'Cattle 2',
-                        child: Center(
-                            child: Text('Cattle 2',
-                                style: TextStyle(fontSize: 12)))),
-                  ],
-                ),
+              FutureBuilder(
+                future: getBreedOfCattle(),
+                builder: (context, snapshot) {
+                  if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No breeds available'));
+                  } else if (snapshot.hasData) {
+                    List<GetBreedOfCattle> breeds = snapshot.data!;
+
+                    return Container(
+                        height: MediaQuery.of(context).size.height * 0.055,
+                        padding: EdgeInsets.only(left: 9),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(5.5),
+                          color: Colors.white,
+                          border: Border.all(
+                            color: Colors.black,
+                            width: 1,
+                          ),
+                        ),
+                        child: DropdownButton<String>(
+                          alignment: Alignment.center,
+                          isExpanded: true,
+                          value: cattleType,
+                          onChanged: (String? newValue) {
+                            setState(() {
+                              cattleType = newValue;
+                            });
+                          },
+                          items: breeds.map((breed) {
+                            return DropdownMenuItem<String>(
+                              value: breed.label,
+                              child: Center(
+                                child: Text(
+                                  breed.label,
+                                  style: TextStyle(fontSize: 12),
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                        ));
+                  } else {
+                    return Center(child: Text('No appointments available'));
+                  }
+                },
               ),
               SizedBox(
                 height: 10,
@@ -214,9 +263,9 @@ class _CattleListingFormState extends State<CattleListingForm> {
                   isExpanded: true,
                   value: isOnHeat,
                   onChanged: (String? newValue) {
-                    // setState(() {
-                    //   entranceDoorValue = newValue ?? entranceDoorValue;
-                    // });
+                    setState(() {
+                      isOnHeat = newValue ?? isOnHeat;
+                    });
                   },
                   items: [
                     DropdownMenuItem<String>(
@@ -261,83 +310,93 @@ class _CattleListingFormState extends State<CattleListingForm> {
                 child: DropdownButton<String>(
                   alignment: Alignment.center,
                   isExpanded: true,
-                  value: cattleType,
+                  value: heatPeriod,
                   onChanged: (String? newValue) {
-                    // setState(() {
-                    //   entranceDoorValue = newValue ?? entranceDoorValue;
-                    // });
+                    setState(() {
+                      heatPeriod = newValue ?? heatPeriod;
+                    });
                   },
-                  items: [
-                    DropdownMenuItem<String>(
-                        value: '',
-                        child: Center(
-                            child: Text(
-                          '',
-                          style: TextStyle(fontSize: 12),
-                        ))),
-                    DropdownMenuItem<String>(
-                        value: '1 week',
-                        child: Center(
-                            child: Text(
-                          '1 week',
-                          style: TextStyle(fontSize: 12),
-                        ))),
-                    DropdownMenuItem<String>(
-                        value: '2 week',
-                        child: Center(
-                            child: Text('2 week',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '3 week',
-                        child: Center(
-                            child: Text('2 week',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '1 month',
-                        child: Center(
-                            child: Text('1 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '2 month',
-                        child: Center(
-                            child: Text('2 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '3 month',
-                        child: Center(
-                            child: Text('3 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '4 month',
-                        child: Center(
-                            child: Text('4 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '5 month',
-                        child: Center(
-                            child: Text('5 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '6 month',
-                        child: Center(
-                            child: Text('6 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '1 year before',
-                        child: Center(
-                            child: Text('1 year before',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '1.5 year before',
-                        child: Center(
-                            child: Text('1.5 year before',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: 'more than 2 years',
-                        child: Center(
-                            child: Text('more than 2 years',
-                                style: TextStyle(fontSize: 12)))),
-                  ],
+                  items: isOnHeat == "No"
+                      ? [
+                          DropdownMenuItem<String>(
+                              value: '',
+                              child: Center(
+                                  child: Text(
+                                '',
+                                style: TextStyle(fontSize: 12),
+                              ))),
+                        ]
+                      : [
+                          DropdownMenuItem<String>(
+                              value: '',
+                              child: Center(
+                                  child: Text(
+                                '',
+                                style: TextStyle(fontSize: 12),
+                              ))),
+                          DropdownMenuItem<String>(
+                              value: '1 week',
+                              child: Center(
+                                  child: Text(
+                                '1 week',
+                                style: TextStyle(fontSize: 12),
+                              ))),
+                          DropdownMenuItem<String>(
+                              value: '2 week',
+                              child: Center(
+                                  child: Text('2 week',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '3 week',
+                              child: Center(
+                                  child: Text('2 week',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '1 month',
+                              child: Center(
+                                  child: Text('1 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '2 month',
+                              child: Center(
+                                  child: Text('2 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '3 month',
+                              child: Center(
+                                  child: Text('3 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '4 month',
+                              child: Center(
+                                  child: Text('4 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '5 month',
+                              child: Center(
+                                  child: Text('5 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '6 month',
+                              child: Center(
+                                  child: Text('6 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '1 year before',
+                              child: Center(
+                                  child: Text('1 year before',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '1.5 year before',
+                              child: Center(
+                                  child: Text('1.5 year before',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: 'more than 2 years',
+                              child: Center(
+                                  child: Text('more than 2 years',
+                                      style: TextStyle(fontSize: 12)))),
+                        ],
                 ),
               ),
               SizedBox(
@@ -363,9 +422,9 @@ class _CattleListingFormState extends State<CattleListingForm> {
                   isExpanded: true,
                   value: isOnPregnant,
                   onChanged: (String? newValue) {
-                    // setState(() {
-                    //   entranceDoorValue = newValue ?? entranceDoorValue;
-                    // });
+                    setState(() {
+                      isOnPregnant = newValue ?? isOnPregnant;
+                    });
                   },
                   items: [
                     DropdownMenuItem<String>(
@@ -412,64 +471,74 @@ class _CattleListingFormState extends State<CattleListingForm> {
                   isExpanded: true,
                   value: pregantPeriod,
                   onChanged: (String? newValue) {
-                    // setState(() {
-                    //   entranceDoorValue = newValue ?? entranceDoorValue;
-                    // });
+                    setState(() {
+                      pregantPeriod = newValue ?? pregantPeriod;
+                    });
                   },
-                  items: [
-                    DropdownMenuItem<String>(
-                        value: '',
-                        child: Center(
-                            child: Text(
-                          '',
-                          style: TextStyle(fontSize: 12),
-                        ))),
-                    DropdownMenuItem<String>(
-                        value: '1 month',
-                        child: Center(
-                            child: Text('1 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '2 month',
-                        child: Center(
-                            child: Text('2 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '3 month',
-                        child: Center(
-                            child: Text('3 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '4 month',
-                        child: Center(
-                            child: Text('4 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '5 month',
-                        child: Center(
-                            child: Text('5 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '6 month',
-                        child: Center(
-                            child: Text('6 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '7 month',
-                        child: Center(
-                            child: Text('7 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '8 month',
-                        child: Center(
-                            child: Text('8 month',
-                                style: TextStyle(fontSize: 12)))),
-                    DropdownMenuItem<String>(
-                        value: '9 month',
-                        child: Center(
-                            child: Text('9 month',
-                                style: TextStyle(fontSize: 12)))),
-                  ],
+                  items: isOnPregnant == "No"
+                      ? [
+                          DropdownMenuItem<String>(
+                              value: '',
+                              child: Center(
+                                  child: Text(
+                                '',
+                                style: TextStyle(fontSize: 12),
+                              ))),
+                        ]
+                      : [
+                          DropdownMenuItem<String>(
+                              value: '',
+                              child: Center(
+                                  child: Text(
+                                '',
+                                style: TextStyle(fontSize: 12),
+                              ))),
+                          DropdownMenuItem<String>(
+                              value: '1 month',
+                              child: Center(
+                                  child: Text('1 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '2 month',
+                              child: Center(
+                                  child: Text('2 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '3 month',
+                              child: Center(
+                                  child: Text('3 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '4 month',
+                              child: Center(
+                                  child: Text('4 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '5 month',
+                              child: Center(
+                                  child: Text('5 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '6 month',
+                              child: Center(
+                                  child: Text('6 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '7 month',
+                              child: Center(
+                                  child: Text('7 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '8 month',
+                              child: Center(
+                                  child: Text('8 month',
+                                      style: TextStyle(fontSize: 12)))),
+                          DropdownMenuItem<String>(
+                              value: '9 month',
+                              child: Center(
+                                  child: Text('9 month',
+                                      style: TextStyle(fontSize: 12)))),
+                        ],
                 ),
               ),
               SizedBox(
@@ -525,17 +594,14 @@ class _CattleListingFormState extends State<CattleListingForm> {
               SizedBox(
                 height: 10,
               ),
+              const Text(
+                'Classified Attachments',
+                style:
+                    TextStyle(color: Colors.black, fontWeight: FontWeight.w500),
+              ),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  const Text(
-                    'Classified Attachments',
-                    style: TextStyle(
-                        color: Colors.black, fontWeight: FontWeight.w500),
-                  ),
-                  // SizedBox(
-                  //   width: 28,
-                  // ),
                   ElevatedButton.icon(
                     style: ButtonStyle(
                       backgroundColor: WidgetStatePropertyAll(
@@ -551,13 +617,18 @@ class _CattleListingFormState extends State<CattleListingForm> {
                       'Browse',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: () {
-                      // getImage();
-                    },
+                    onPressed: _pickFiles,
                   ),
                   SizedBox(
-                    width: 30,
+                    height: 15,
                   ),
+                  _selectedFiles.isNotEmpty
+                      ? Column(
+                          children: _selectedFiles.map((file) {
+                            return Text("File uploaded");
+                          }).toList(),
+                        )
+                      : Text('No files selected'),
                   // Text(
                   //   _image != null && _image!.path.isNotEmpty
                   //       ? "File Uploaded"
@@ -569,7 +640,25 @@ class _CattleListingFormState extends State<CattleListingForm> {
                 height: 25,
               ),
               MaterialButton(
-                onPressed: () {},
+                onPressed: () {
+                  final form = CattleListModel(
+                    sellingProductCategory: productCategory,
+                    typeOfCattle: cattleType!,
+                    cattleBreed: cattleBreed.text,
+                    age: double.tryParse(age.text) ?? 0.0,
+                    noOfHeat: 0,
+                    isOnHeat: isOnHeat,
+                    heatPeriod: heatPeriod,
+                    isOnPregnant: isOnPregnant,
+                    pregnantPeriod: pregantPeriod,
+                    nowMilkPerDay: double.tryParse(milkPerDay.text) ?? 0.0,
+                    milkCapacityPerDay:
+                        double.tryParse(milkCapacityPerDay.text) ?? 0.0,
+                    classifiedAttachments: _selectedFiles,
+                  );
+
+                  NetworkApiServices().CattleListing(form);
+                },
                 child: Center(child: Text("Submit")),
                 minWidth: double.infinity,
                 color: Colors.orange,

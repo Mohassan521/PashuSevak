@@ -132,7 +132,9 @@ class _PashuSevakHomePageState extends State<PashuSevakHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AppointmentDetailsPage(),
+                        builder: (context) => AppointmentDetailsPage(
+                          sid: "",
+                        ),
                       ),
                     );
                   },

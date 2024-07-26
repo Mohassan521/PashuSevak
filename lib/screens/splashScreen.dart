@@ -31,8 +31,10 @@ class _SplashScreenState extends State<SplashScreen> {
         });
       } else if (role == "Farmer") {
         Timer(const Duration(seconds: 5), () {
-          Navigator.pushReplacement(context,
-              MaterialPageRoute(builder: (context) => CattleFarmHomePage()));
+          Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(
+                  builder: (context) => CattleFarmHomePage(sid: sid)));
         });
       }
     } else {

@@ -1,6 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:pashusevak/models/bannerList.dart';
+import 'package:pashusevak/screens/cattleListingForm.dart';
 import 'package:pashusevak/screens/emergencyCare.dart';
 import 'package:pashusevak/screens/healthReports.dart';
 import 'package:pashusevak/screens/pharmacyForFarmers.dart';
@@ -14,7 +15,8 @@ import 'package:pashusevak/widgets/nearbyConsultants.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
 
 class CattleFarmHomePage extends StatefulWidget {
-  const CattleFarmHomePage({super.key});
+  final String sid;
+  const CattleFarmHomePage({super.key, required this.sid});
 
   @override
   State<CattleFarmHomePage> createState() => _CattleFarmHomePageState();
@@ -308,8 +310,31 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
           ),
 
           // sell our service
-          Center(
-            child: Image.asset("assets/images/coming-soon.jpeg"),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                MaterialButton(
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => CattleListingForm(
+                          sid: widget.sid,
+                        ),
+                      ),
+                    );
+                  },
+                  child: Text("List Your Cattle"),
+                  minWidth: double.infinity,
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
+                  color: Colors.orange,
+                  textColor: Colors.white,
+                ),
+              ],
+            ),
           )
         ]),
       ),

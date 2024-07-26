@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pashusevak/screens/FrontPage.dart';
+import 'package:pashusevak/services/apiServices.dart';
 import 'package:pashusevak/widgets/loginScreen.dart';
 
 class FarmerSideDrawer extends StatelessWidget {
@@ -8,26 +9,6 @@ class FarmerSideDrawer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Future<void> logout() async {
-      final String apiUrl = 'http://43.205.23.114/api/method/logout';
-
-      try {
-        final response = await http.get(
-          Uri.parse(apiUrl),
-        );
-
-        if (response.statusCode == 200) {
-          print('Logout responce: ${response.body}');
-          print('Logout Successful');
-        } else {
-          print('Logout Error: ${response.statusCode}');
-          print('Logout Response: ${response.body}');
-        }
-      } catch (error) {
-        print('Error during logout: $error');
-      }
-    }
-
     return SafeArea(
       child: Drawer(
         shape: RoundedRectangleBorder(
@@ -170,7 +151,8 @@ class FarmerSideDrawer extends StatelessWidget {
               ),
               InkWell(
                 onTap: () {
-                  logout();
+                  // logout();
+                  NetworkApiServices().logout();
                   Navigator.push(
                     context,
                     MaterialPageRoute(

@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:core';
 
 import 'package:http/http.dart' as http;
+import 'package:pashusevak/models/appointmentList.dart';
 import 'package:pashusevak/models/bannerList.dart';
 import 'package:pashusevak/models/cattleListModel.dart';
+import 'package:pashusevak/models/getBreedOfCattle.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkApiServices {
@@ -31,6 +34,27 @@ class NetworkApiServices {
     }
   }
 
+  Future<List<GetBreedOfCattle>> getBreedOfCattle(String sid) async {
+    String url =
+        "http://43.205.23.114/api/method/oymom.api.get_breed_of_cattle";
+
+    var request = await http.get(Uri.parse(url), headers: {
+      'Content-Type': 'application/json',
+      'Cookie': 'sid=$sid',
+    });
+
+    if (request.statusCode == 200) {
+      List<dynamic> body = jsonDecode(request.body)['message'];
+
+      List<GetBreedOfCattle> banners =
+          body.map((dynamic item) => GetBreedOfCattle.fromJson(item)).toList();
+      print("message array: $banners");
+      return banners;
+    } else {
+      throw Exception('Failed to load images');
+    }
+  }
+
   Future<void> CattleListing(CattleListModel model) async {
     final apiUrl = "http://43.205.23.114/api/method/oymom.api.make_classified";
 
@@ -39,13 +63,13 @@ class NetworkApiServices {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: {"forms": model.toJson()},
+      body: jsonEncode({"forms": model.toJson()}),
     );
 
     if (request.statusCode == 200) {
       print("Form submitted successfully");
     } else {
-      print('Failed to submit form: ${request.statusCode}');
+      print('Failed to submit form: ${request.body}');
     }
   }
 
@@ -62,6 +86,26 @@ class NetworkApiServices {
       return banners;
     } else {
       throw Exception('Failed to load images');
+    }
+  }
+
+  Future<List<AppointmentListModel>> getAppointmentList(String sid) async {
+    var apiUrl = "http://43.205.23.114/api/method/oymom.api.appointment_list";
+
+    var request = await http.get(Uri.parse(apiUrl), headers: {
+      'Content-Type': 'application/json',
+      'Cookie': 'sid=$sid',
+    });
+
+    if (request.statusCode == 200) {
+      final responseBody = json.decode(request.body);
+      final List<dynamic> appointmentsJson = responseBody['message'];
+      print("appointments json: $appointmentsJson");
+      return appointmentsJson
+          .map((json) => AppointmentListModel.fromJson(json))
+          .toList();
+    } else {
+      throw Exception('Failed to load appointments');
     }
   }
 

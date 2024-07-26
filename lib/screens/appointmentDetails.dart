@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/services/apiServices.dart';
 import 'package:pashusevak/widgets/completedAppointments.dart';
 
 class AppointmentDetailsPage extends StatelessWidget {
-  const AppointmentDetailsPage({super.key});
+  final String sid;
+  const AppointmentDetailsPage({super.key, required this.sid});
 
   @override
   Widget build(BuildContext context) {
@@ -21,130 +23,152 @@ class AppointmentDetailsPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Text(
-                "Active Appointments (1)",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Card(
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                elevation: 1,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+            FutureBuilder(
+              future: NetworkApiServices().getAppointmentList(sid),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: Text("Loading Appointments..."));
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (snapshot.hasData) {
+                  final appointments = snapshot.data!;
+                  return Column(
                     children: [
-                      Text(
-                        'Emergency Appointment',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(height: 8),
-                      Row(
-                        children: [
-                          Icon(Icons.access_time, color: Colors.grey),
-                          SizedBox(width: 8),
-                          Text(
-                            '30 minutes to arrive',
-                            style: TextStyle(
-                              color: Colors.grey,
-                            ),
+                      Padding(
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+                        child: Text(
+                          "Active Appointments ${appointments.length}",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
                           ),
-                        ],
-                      ),
-                      Divider(height: 20, thickness: 0.75),
-                      Text(
-                        'Booking ID',
-                        style: TextStyle(
-                          color: Colors.grey,
                         ),
                       ),
-                      Text(
-                        'Dr. Kutkutiya Chenak',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'Health Status',
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Text(
-                        'Bad Health',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      SizedBox(height: 5),
-                      Text(
-                        'Breed',
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                      Text(
-                        'Cow',
-                        style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
-                      Divider(height: 20, thickness: 0.75),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          TextButton.icon(
-                            onPressed: () {},
-                            icon: Icon(Icons.location_on_outlined,
-                                color: Colors.black),
-                            label: Text(
-                              'Get Location',
-                              style: TextStyle(color: Colors.black),
-                            ),
+                      Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 10),
+                        child: Card(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(15),
                           ),
-                          ElevatedButton(
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xfffe924b),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                            ),
-                            onPressed: () {},
-                            child: Row(
+                          elevation: 1,
+                          child: Padding(
+                            padding: const EdgeInsets.all(16.0),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  'Confirm',
-                                  style: TextStyle(color: Colors.white),
+                                  'Emergency Appointment',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                Icon(
-                                  Icons.arrow_forward,
-                                  color: Colors.white,
+                                SizedBox(height: 8),
+                                Row(
+                                  children: [
+                                    Icon(Icons.access_time, color: Colors.grey),
+                                    SizedBox(width: 8),
+                                    Text(
+                                      '30 minutes to arrive',
+                                      style: TextStyle(
+                                        color: Colors.grey,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                Divider(height: 20, thickness: 0.75),
+                                Text(
+                                  'Booking ID',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  'Dr. Kutkutiya Chenak',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Health Status',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  'Bad Health',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                SizedBox(height: 5),
+                                Text(
+                                  'Breed',
+                                  style: TextStyle(
+                                    color: Colors.grey,
+                                  ),
+                                ),
+                                Text(
+                                  'Cow',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                Divider(height: 20, thickness: 0.75),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    TextButton.icon(
+                                      onPressed: () {},
+                                      icon: Icon(Icons.location_on_outlined,
+                                          color: Colors.black),
+                                      label: Text(
+                                        'Get Location',
+                                        style: TextStyle(color: Colors.black),
+                                      ),
+                                    ),
+                                    ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                        backgroundColor: Color(0xfffe924b),
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(20),
+                                        ),
+                                      ),
+                                      onPressed: () {},
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                            'Confirm',
+                                            style:
+                                                TextStyle(color: Colors.white),
+                                          ),
+                                          Icon(
+                                            Icons.arrow_forward,
+                                            color: Colors.white,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
                           ),
-                        ],
+                        ),
                       ),
                     ],
-                  ),
-                ),
-              ),
+                  );
+                } else {
+                  return Center(child: Text('No appointments available'));
+                }
+              },
             ),
             SizedBox(
               height: 15,

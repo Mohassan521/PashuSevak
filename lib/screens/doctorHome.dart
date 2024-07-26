@@ -133,7 +133,9 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => AppointmentDetailsPage(),
+                        builder: (context) => AppointmentDetailsPage(
+                          sid: widget.sid,
+                        ),
                       ),
                     );
                   },

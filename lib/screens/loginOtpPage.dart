@@ -5,6 +5,7 @@ import 'package:pashusevak/screens/FrontPage.dart';
 import 'package:pashusevak/screens/cattleFarmHome.dart';
 import 'package:pashusevak/screens/doctorHome.dart';
 import 'package:pashusevak/widgets/loginScreen.dart';
+import 'package:pinput/pinput.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class OtpManagerr {
@@ -135,7 +136,9 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
                     sid: storedSid,
                   );
                 } else if (loginRole == 'Farmer') {
-                  return const CattleFarmHomePage();
+                  return CattleFarmHomePage(
+                    sid: storedSid,
+                  );
                 } else {
                   return FrontPage();
                 }
@@ -174,13 +177,36 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
     );
   }
 
+  void _validateAndSubmitOTP(String otp) {
+    if (_formKey.currentState!.validate()) {
+      // Check if the OTP is correct
+      if (otp == widget.generatedOTP) {
+        loginWithOTP();
+      } else {
+        showErrorMessage();
+        print("------------------");
+        print(widget.generatedOTP);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    Color themeColor = Theme.of(context).primaryColor;
-
+    final defaultPinTheme = PinTheme(
+        width: 56,
+        height: 60,
+        textStyle: TextStyle(
+          fontSize: 22,
+          color: Colors.black,
+        ),
+        decoration: BoxDecoration(
+          color: Colors.grey.shade300,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(color: Colors.transparent),
+        ));
     return Scaffold(
       appBar: AppBar(
-        title: const Text("OTP Verification"),
+        title: const Text("OTP Verifications"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
@@ -197,46 +223,62 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
                   style: TextStyle(fontSize: 20),
                 ),
                 const SizedBox(height: 16),
-                TextFormField(
-                  controller: _otpController,
-                  decoration: InputDecoration(
-                    labelText: 'Enter OTP',
-                    prefixIcon: Icon(Icons.lock, color: themeColor),
-                  ),
-                  keyboardType: TextInputType.number,
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'OTP is required';
-                    }
-                    return null;
-                  },
-                ),
-                const SizedBox(height: 16),
                 Container(
-                  width: double.infinity,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Theme.of(context).primaryColor,
+                  child: Pinput(
+                    length: 6,
+                    defaultPinTheme: defaultPinTheme,
+                    focusedPinTheme: defaultPinTheme.copyWith(
+                      decoration: defaultPinTheme.decoration?.copyWith(
+                        border: Border.all(
+                          color: Colors.grey,
+                        ),
+                      ),
                     ),
-                    onPressed: () {
-                      if (_formKey.currentState!.validate()) {
-                        // If the OTP is correct, call the login API
-                        if (_otpController.text == widget.generatedOTP) {
-                          loginWithOTP();
-                        } else {
-                          // If the OTP is incorrect, show an error message
-                          showErrorMessage();
-                          print("------------------");
-                          print(widget.generatedOTP);
-                        }
-                      }
+                    onCompleted: (value) {
+                      _validateAndSubmitOTP(value);
                     },
-                    child: const Text(
-                      'Verify OTP',
-                      style: TextStyle(color: Colors.white),
-                    ),
                   ),
                 ),
+                // TextFormField(
+                //   controller: _otpController,
+                //   decoration: InputDecoration(
+                //     labelText: 'Enter OTP',
+                //     prefixIcon: Icon(Icons.lock, color: themeColor),
+                //   ),
+                //   keyboardType: TextInputType.number,
+                //   validator: (value) {
+                //     if (value == null || value.isEmpty) {
+                //       return 'OTP is required';
+                //     }
+                //     return null;
+                //   },
+                // ),
+                // const SizedBox(height: 16),
+                // Container(
+                //   width: double.infinity,
+                //   child: ElevatedButton(
+                //     style: ElevatedButton.styleFrom(
+                //       backgroundColor: Theme.of(context).primaryColor,
+                //     ),
+                //     onPressed: () {
+                //       if (_formKey.currentState!.validate()) {
+                //         // If the OTP is correct, call the login API
+                //         if (_otpController.text == widget.generatedOTP) {
+                //           loginWithOTP();
+                //         } else {
+                //           // If the OTP is incorrect, show an error message
+                //           showErrorMessage();
+                //           print("------------------");
+                //           print(widget.generatedOTP);
+                //         }
+                //       }
+                //     },
+                //     child: const Text(
+                //       'Verify OTP',
+                //       style: TextStyle(color: Colors.white),
+                //     ),
+                //   ),
+                // ),
               ],
             ),
           ),
