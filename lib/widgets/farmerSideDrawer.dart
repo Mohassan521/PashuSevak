@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pashusevak/screens/FrontPage.dart';
+import 'package:pashusevak/screens/ProfileScreen.dart';
 import 'package:pashusevak/services/apiServices.dart';
 import 'package:pashusevak/widgets/loginScreen.dart';
 
 class FarmerSideDrawer extends StatelessWidget {
-  const FarmerSideDrawer({super.key});
+  final String sid;
+  const FarmerSideDrawer({super.key, required this.sid});
 
   @override
   Widget build(BuildContext context) {
@@ -60,25 +62,32 @@ class FarmerSideDrawer extends StatelessWidget {
               SizedBox(
                 height: 28,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.person,
-                    color: Colors.black,
-                    size: 24,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    "Profile",
-                    style: TextStyle(
-                      fontSize: 17.5,
-                      fontWeight: FontWeight.bold,
+              InkWell(
+                onTap: () {
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(
+                    sid: sid,
+                  ),),);
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    Icon(
+                      Icons.person,
+                      color: Colors.black,
+                      size: 24,
                     ),
-                  )
-                ],
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      "Profile",
+                      style: TextStyle(
+                        fontSize: 17.5,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    )
+                  ],
+                ),
               ),
               SizedBox(
                 height: 23.5,

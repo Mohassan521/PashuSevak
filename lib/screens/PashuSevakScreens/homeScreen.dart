@@ -28,7 +28,7 @@ class _PashuSevakHomePageState extends State<PashuSevakHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      drawer: DoctorSideDrawer(),
+      drawer: DoctorSideDrawer(sid: "",),
       appBar: AppBar(
         title: Column(
           children: [
@@ -93,7 +93,7 @@ class _PashuSevakHomePageState extends State<PashuSevakHomePage> {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => PrescriptionAndReport(),
+                        builder: (context) => PrescriptionAndReport(sid: "",),
                       ),
                     );
                   },

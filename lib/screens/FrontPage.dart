@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:pashusevak/Utils/localization.dart';
 import 'package:pashusevak/widgets/loginScreen.dart';
 import 'package:pashusevak/widgets/register.dart';
 
@@ -31,7 +32,7 @@ class _FrontPageState extends State<FrontPage> {
         child: Column(
           children: [
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.19,
+              height: MediaQuery.of(context).size.height * 0.25,
             ),
             Expanded(
               child: Container(
@@ -45,14 +46,15 @@ class _FrontPageState extends State<FrontPage> {
                 child: Padding(
                   padding: const EdgeInsets.all(20),
                   child: DefaultTabController(
-                    length: 3,
+                    length: 2,
                     child: Column(
                       children: [
                         TabBar(
                           tabs: [
-                            Tab(text: 'Sign In'),
-                            Tab(text: 'Pashusevak Sign Up'),
-                            Tab(text: 'Doctor Sign Up'),
+                            Tab(text: Localization.of(context)!
+                      .translate('signin')!),
+                            Tab(text: Localization.of(context)!
+                      .translate('signup') ?? "")
                           ],
                           labelColor: Colors.black,
                           labelStyle: TextStyle(fontSize: 17.5),
@@ -64,9 +66,6 @@ class _FrontPageState extends State<FrontPage> {
                             children: [
                               LoginPage(),
                               RegisterPage(),
-                              Center(
-                                child: Text("hello"),
-                              )
                               // SignInForm(),
                               // SignUpForm(),
                             ],

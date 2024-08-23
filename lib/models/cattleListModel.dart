@@ -1,5 +1,3 @@
-import 'dart:convert';
-import 'dart:io';
 
 class CattleListModel {
   final String sellingProductCategory;
@@ -13,7 +11,7 @@ class CattleListModel {
   final String pregnantPeriod;
   final double nowMilkPerDay;
   final double milkCapacityPerDay;
-  final List<File?> classifiedAttachments;
+  final List<String> classifiedAttachments;
 
   CattleListModel({
     required this.sellingProductCategory,
@@ -43,9 +41,7 @@ class CattleListModel {
       'pregnant_period': pregnantPeriod,
       'now_milk_per_day': nowMilkPerDay,
       'milk_capacity_per_day': milkCapacityPerDay,
-      'classifed_attachments': classifiedAttachments.map((file) {
-        return base64Encode(file!.readAsBytesSync());
-      }).toList(),
+      'classifed_attachments': classifiedAttachments,
     };
   }
 }

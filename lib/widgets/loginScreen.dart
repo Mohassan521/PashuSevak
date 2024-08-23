@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
+import 'package:pashusevak/Utils/localization.dart';
 import 'package:pashusevak/screens/loginOtpPage.dart';
 
 class LoginPage extends StatefulWidget {
@@ -89,12 +90,14 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               SizedBox(height: 20),
               Text(
-                'Sign In',
+                Localization.of(context)!
+                      .translate('signin')!,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               // SizedBox(height: 10),
               Text(
-                'Sign in to get community based Veterinary care service provider.',
+                Localization.of(context)!
+                      .translate('message')!,
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 20),
@@ -123,7 +126,8 @@ class _LoginPageState extends State<LoginPage> {
               generateLoginOTP();
             },
             child: Text(
-              "Log In",
+              Localization.of(context)!
+                      .translate('login')! ,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 18,

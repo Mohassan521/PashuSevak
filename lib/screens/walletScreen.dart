@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/Utils/localization.dart';
 import 'package:pashusevak/services/apiServices.dart';
 
 class WalletScreen extends StatelessWidget {
@@ -12,7 +13,8 @@ class WalletScreen extends StatelessWidget {
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.orange,
         title: Text(
-          "Hi, Doctor",
+          Localization.of(context)!
+                      .translate('greeting')!,
           style: TextStyle(
             color: Colors.white,
           ),
@@ -47,7 +49,8 @@ class WalletScreen extends StatelessWidget {
                   height: 20,
                 ),
                 Text(
-                  "Total Balance",
+                  Localization.of(context)!
+                      .translate('total_balance')!,
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 21,
@@ -100,7 +103,8 @@ class WalletScreen extends StatelessWidget {
                       width: 1.5,
                     )),
                 onPressed: () {},
-                child: Center(child: Text("Transfer Money")),
+                child: Center(child: Text(Localization.of(context)!
+                      .translate('transfer_money')!)),
                 color: Colors.white,
                 textColor: Colors.orange,
                 padding: EdgeInsets.symmetric(
@@ -115,7 +119,8 @@ class WalletScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(28),
                 ),
                 onPressed: () {},
-                child: Text("Add Money"),
+                child: Text(Localization.of(context)!
+                      .translate('add_money')!),
                 color: Colors.orange,
                 textColor: Colors.white,
                 padding: EdgeInsets.symmetric(
@@ -130,7 +135,8 @@ class WalletScreen extends StatelessWidget {
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 15.0),
             child: Text(
-              "Last Transactions",
+              Localization.of(context)!
+                      .translate('last_transactions')!,
               style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
             ),
           ),

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 
 class ServiceTiles extends StatelessWidget {
   final String name;
-  final String image;
+  final String? image;
+  final IconData? icon;
   final void Function()? onTap;
   final Color? color;
   const ServiceTiles(
       {super.key,
-      required this.image,
+      this.icon,
+       this.image,
       required this.name,
       required this.onTap,
       this.color});
@@ -28,7 +30,7 @@ class ServiceTiles extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            Image.asset(image),
+            image != null ? Image.asset(image!) : Icon(icon, color: Colors.blue,size: 36,),
             SizedBox(
               height: 8,
             ),

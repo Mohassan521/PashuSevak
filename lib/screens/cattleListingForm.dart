@@ -36,18 +36,23 @@ class _CattleListingFormState extends State<CattleListingForm> {
     }
   }
 
-  List<File?> _selectedFiles = [];
+  List<String> _selectedFiles = [];
 
   Future<void> _pickFiles() async {
     // Use FilePicker to select multiple files
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
-      allowedExtensions: ['jpg', 'pdf', 'doc'],
+      allowedExtensions: ['jpg', 'png'],
+      allowMultiple: true
     );
 
     if (result != null) {
-      _selectedFiles = result.paths.map((path) => File(path!)).toList();
-      setState(() {});
+      _selectedFiles.addAll(result.paths.where((path) => path != null).cast<String>());
+      setState(() {
+         
+      });
+     
+      
     } else {
       // User canceled the picker
       print('File selection canceled.');
@@ -657,7 +662,9 @@ class _CattleListingFormState extends State<CattleListingForm> {
                     classifiedAttachments: _selectedFiles,
                   );
 
-                  NetworkApiServices().CattleListing(form);
+                  NetworkApiServices().CattleListing(
+                      form                   
+                      );
                 },
                 child: Center(child: Text("Submit")),
                 minWidth: double.infinity,

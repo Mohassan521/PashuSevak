@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pashusevak/provider/provider.dart';
 import 'package:pashusevak/screens/FrontPage.dart';
+import 'package:pashusevak/widgets/loginScreen.dart';
+import 'package:provider/provider.dart';
 
 class SelectLanguageScreen extends StatefulWidget {
   const SelectLanguageScreen({super.key});
@@ -9,8 +12,13 @@ class SelectLanguageScreen extends StatefulWidget {
 }
 
 class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
+
+  
+
+
   @override
   Widget build(BuildContext context) {
+    final localeProvider = Provider.of<LocalProvider>(context, listen: false);
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
@@ -32,7 +40,10 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                   height: 15,
                 ),
                 MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    localeProvider.setLocale(const Locale('en', 'US'));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FrontPage()));
+                  },
                   child: Center(child: Text("English")),
                   color: Colors.white,
                   padding: EdgeInsets.all(18),
@@ -47,7 +58,10 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                   height: 10,
                 ),
                 MaterialButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    localeProvider.setLocale(const Locale('hi', 'IN'));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FrontPage()));
+                  },
                   child: Center(child: Text("Hindi")),
                   color: Colors.white,
                   padding: EdgeInsets.all(18),
@@ -59,18 +73,6 @@ class _SelectLanguageScreenState extends State<SelectLanguageScreen> {
                   ),
                 ),
               ],
-            ),
-            MaterialButton(
-              onPressed: () {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => FrontPage()));
-              },
-              child: Center(child: Text("Continue")),
-              color: Colors.orange,
-              textColor: Colors.white,
-              padding: EdgeInsets.all(18),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(15)),
             ),
           ],
         ),

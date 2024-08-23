@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:pashusevak/Utils/localization.dart';
 import 'package:pashusevak/screens/FrontPage.dart';
 import 'package:pashusevak/screens/cattleFarmHome.dart';
 import 'package:pashusevak/screens/doctorHome.dart';
@@ -206,7 +207,8 @@ class _LoginOtpVerificationPageState extends State<LoginOtpVerificationPage> {
         ));
     return Scaffold(
       appBar: AppBar(
-        title: const Text("OTP Verifications"),
+        title:  Text(Localization.of(context)!
+                      .translate('otp')!),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16),
