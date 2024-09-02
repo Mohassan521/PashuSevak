@@ -651,7 +651,7 @@ class _PrescriptionAndReportState extends State<PrescriptionAndReport> {
 
               MaterialButton(onPressed: (){
                 NetworkApiServices().createEncounter(widget.sid, appointmentList!, medication ?? "", dosage ?? "", period ?? "", dosageFrom ?? "", comment.text, symptoms1 ?? "", symptoms2 ?? "", diagnosis1 ?? "", diagnosis2 ?? "").then((value){
-                  Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedAnyTask(message: "Prescription Created")));
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedAnyTask(message: "Prescription Created", sid: widget.sid,)));
                 });
               },
               child: Text("Submit"),

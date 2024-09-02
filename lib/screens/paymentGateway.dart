@@ -87,7 +87,7 @@ class PaymentGateway extends StatelessWidget {
                   onPressed: () {
                     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
                     NetworkApiServices().createAppointment(doctorId, formattedDate, farmer_email, service_unit, appt_time, sid).then((value){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedAnyTask(message: "Appointment Created",)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedAnyTask(message: "Appointment Created", sid: sid,)));
                     });
                     print("After appointment creation: $doctorId, $selectedDate, $farmer_email, $service_unit, $appt_time");
                   },

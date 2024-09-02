@@ -47,13 +47,14 @@ dependencies:
   pinput: ^5.0.0
   google_maps_flutter: ^2.7.0
   location: ^7.0.0
-  geolocator: ^8.1.1
+  geolocator: ^9.0.0
   geocoding: ^2.0.1
   flutter_polyline_points: ^2.1.0
   path_provider: ^2.1.4
   provider: ^6.1.2
   datetime_picker_formfield_new: ^2.1.0
   lottie: ^3.1.2
+  permission_handler: ^10.2.0
   # permission_handler: ^11.0.0
 
 dev_dependencies:

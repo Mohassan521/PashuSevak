@@ -344,6 +344,31 @@ class NetworkApiServices {
     }
   }
 
+  Future<List<CattleListModel>> cattleListItems (String sid) async {
+    var apiUrl = "http://43.205.23.114/api/method/oymom.api.get_classified";
+
+    var request = await http.get(Uri.parse(apiUrl),
+      headers: {
+      'Content-Type': 'application/json',
+      'Cookie': 'sid=$sid',
+    },
+    );
+
+    if(request.statusCode == 200){
+      final responseBody = json.decode(request.body);
+      final List<dynamic> appointmentsJson = responseBody['message'];
+
+      print("cattle list: $appointmentsJson");
+
+      return appointmentsJson
+          .map((json) => CattleListModel.fromJson(json))
+          .toList();
+    }
+    else{
+      throw Exception("Failed to load data");
+    }
+  }
+
   Future<void> createEncounter (String sid, String appointment, String medication, String dosage, period, dosageForm, comment, String symptomsName, String? symptomsName2,String diagnosis_name, String? diagnosis_name2,  ) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.create_encounter";
 
@@ -579,3 +604,5 @@ class NetworkApiServices {
     }
   }
 }
+
+

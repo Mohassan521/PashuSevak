@@ -57,7 +57,7 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                     Text(
                       'Doctor Name: ${widget.doctorData['doctor_name'] ?? 'N/A'}',
                       style: const TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.bold),
+                          fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       'Course: ${widget.doctorData['course'] ?? 'N/A'}',

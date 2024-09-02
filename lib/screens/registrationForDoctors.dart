@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 import 'package:pashusevak/screens/FrontPage.dart';
 import 'package:pashusevak/screens/Map.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RegistrationForDoctors extends StatefulWidget {
   final TextEditingController emailController;
@@ -51,12 +52,6 @@ class _RegistrationForDoctorsPageState extends State<RegistrationForDoctors> {
   File? _selectedFilepassport;
   File? _selectedFilesign;
 
-  @override
-  void initState() {
-    super.initState();
-    getCurrentLocation();
-  }
-
   void showSuccessMessage(String messege) {
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -88,128 +83,146 @@ class _RegistrationForDoctorsPageState extends State<RegistrationForDoctors> {
   }
 
   void login(
-      doctor_name,
-      father_name,
-      date,
-      mobile,
-      email,
-      address,
-      any_experiance,
-      category_of_breed,
-      prefferd_job_location,
-      job_type,
-      cource,
-      Location,
-      longitude,
-      latitude,
-      visitfees,
-      ownclinicvisitfees,
-      state,
-      block,
-      preferedjoblocstate,
-      ditrict,
-      lastname,
-      areyou,
-      servicetype,
-      havebike,
-      areaofservice,
-      registration_of_certificate,
-      aadhar_card,
-      passport_size,
-      signature) async {
-    // Check if any of the required fields is empty
-    if (doctor_name.isEmpty ||
-        father_name.isEmpty ||
-        date.isEmpty ||
-        mobile.isEmpty ||
-        email.isEmpty ||
-        address.isEmpty ||
-        any_experiance.isEmpty ||
-        category_of_breed.isEmpty ||
-        prefferd_job_location.isEmpty ||
-        Location.isEmpty ||
-        longitude.isEmpty ||
-        latitude.isEmpty ||
-        state.isEmpty ||
-        block.isEmpty ||
-        preferedjoblocstate.isEmpty ||
-        ditrict.isEmpty ||
-        lastname.isEmpty) {
-      showRequiredFieldsError();
-      return;
-    }
+    doctor_name,
+    father_name,
+    date,
+    mobile,
+    email,
+    address,
+    any_experiance,
+    category_of_breed,
+    prefferd_job_location,
+    job_type,
+    cource,
+    Location,
+    longitude,
+    latitude,
+    visitfees,
+    ownclinicvisitfees,
+    state,
+    block,
+    preferedjoblocstate,
+    ditrict,
+    lastname,
+    areyou,
+    servicetype,
+    havebike,
+    areaofservice,
+    registration_of_certificate,
+    aadhar_card,
+    passport_size,
+    signature) async {
 
-    try {
-      var request = http.MultipartRequest(
-        'POST',
-        Uri.parse('http://43.205.23.114/api/method/oymom.api.doctor_register'),
-      );
-
-      request.fields['doctor_name'] = doctor_name;
-      request.fields['father_name'] = father_name;
-      request.fields['date_of_birth'] = date;
-      request.fields['mobile'] = mobile;
-      request.fields['email'] = email;
-      request.fields['address'] = address;
-      request.fields['any_experiance'] = any_experiance;
-      request.fields['category_of_breed'] = category_of_breed;
-      request.fields['prefferd_job_location'] = prefferd_job_location;
-      request.fields['job_type'] = job_type;
-      request.fields['cource'] = cource;
-      request.fields['location'] = Location;
-      request.fields['longitude'] = longitude;
-      request.fields['latitude'] = latitude;
-      request.fields['visit_fees'] = visitfees;
-      request.fields['own_clinic_visit_fees'] = ownclinicvisitfees;
-      request.fields['state'] = state;
-      request.fields['block'] = block;
-      request.fields['preferred_job_location_state'] = preferedjoblocstate;
-      request.fields['district'] = ditrict;
-      request.fields['last_name'] = lastname;
-      request.fields['are_you'] = areyou;
-      request.fields['service_type'] = servicetype;
-      request.fields['have_bike'] = havebike;
-      request.fields['area_of_service_under'] = areaofservice;
-      request.fields['registration_of_certificate'] =
-          registration_of_certificate;
-      request.fields['aadhar_card'] = aadhar_card;
-      request.fields['passport_size'] = passport_size;
-      request.fields['signature'] = signature;
-
-      var response = await request.send();
-
-      if (response.statusCode == 200) {
-        var responseData = await response.stream.bytesToString();
-        var data = jsonDecode(responseData);
-        final message = data['message']?['status'];
-
-        if (message == 'success') {
-          showSuccessMessage("Registration Successfull");
-          Navigator.of(context).popUntil((route) => route.isFirst);
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-            return FrontPage();
-          }));
-        } else {
-          // Handle other cases or show an error message
-          print(responseData);
-          showErrorMessage("response errror");
-        }
-        if (_selectedFile != null) {
-          await uploadFile(_selectedFile!);
-          await uploadFile(_selectedFileaadhar!);
-          await uploadFile(_selectedFilepassport!);
-          await uploadFile(_selectedFilesign!);
-        }
-      } else {
-        showErrorMessage("response errror");
-        print(response.statusCode);
-        print(response.reasonPhrase);
-        print('failed');
-      }
-    } catch (e) {
-      print(e.toString());
-    }
+  // Check if any of the required fields is empty
+  if (doctor_name.isEmpty ||
+      father_name.isEmpty ||
+      date.isEmpty ||
+      mobile.isEmpty ||
+      email.isEmpty ||
+      address.isEmpty ||
+      any_experiance.isEmpty ||
+      category_of_breed.isEmpty ||
+      prefferd_job_location.isEmpty ||
+      Location.isEmpty ||
+      longitude.isEmpty ||
+      latitude.isEmpty ||
+      state.isEmpty ||
+      block.isEmpty ||
+      preferedjoblocstate.isEmpty ||
+      ditrict.isEmpty ||
+      lastname.isEmpty) {
+    showRequiredFieldsError();
+    return;
   }
+
+  try {
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse('http://43.205.23.114/api/method/oymom.api.doctor_register'),
+    );
+
+    // Print each field before adding it to the request to verify values
+    print("doctor_name: $doctor_name");
+    print("father_name: $father_name");
+    print("date: $date");
+    print("mobile: $mobile");
+    print("email: $email");
+    // Continue printing the rest of the fields...
+
+    request.fields['doctor_name'] = doctor_name;
+    request.fields['father_name'] = father_name;
+    request.fields['date_of_birth'] = date;
+    request.fields['mobile'] = mobile;
+    request.fields['email'] = email;
+    request.fields['address'] = address;
+    request.fields['any_experiance'] = any_experiance;
+    request.fields['category_of_breed'] = category_of_breed;
+    request.fields['prefferd_job_location'] = prefferd_job_location;
+    request.fields['job_type'] = job_type;
+    request.fields['cource'] = cource;
+    request.fields['location'] = Location;
+    request.fields['longitude'] = longitude;
+    request.fields['latitude'] = latitude;
+    request.fields['visit_fees'] = visitfees;
+    request.fields['own_clinic_visit_fees'] = ownclinicvisitfees;
+    request.fields['state'] = state;
+    request.fields['block'] = block;
+    request.fields['preferred_job_location_state'] = preferedjoblocstate;
+    request.fields['district'] = ditrict;
+    request.fields['last_name'] = lastname;
+    request.fields['are_you'] = areyou;
+    request.fields['service_type'] = servicetype;
+    request.fields['have_bike'] = havebike;
+    request.fields['area_of_service_under'] = areaofservice;
+    request.fields['registration_of_certificate'] = registration_of_certificate;
+    request.fields['aadhar_card'] = aadhar_card;
+    request.fields['passport_size'] = passport_size;
+    request.fields['signature'] = signature;
+
+    // Print the fields to verify before sending
+    print("Request Fields: ${request.fields}");
+
+    var response = await request.send();
+
+    // Log status and response
+    print("Response status: ${response.statusCode}");
+    print("Response reason: ${response.reasonPhrase}");
+
+    if (response.statusCode == 200) {
+      var responseData = await response.stream.bytesToString();
+      var data = jsonDecode(responseData);
+      print("Response data: $data");
+
+      final message = data['message']?['status'];
+
+      if (message == 'success') {
+        showSuccessMessage("Registration Successful");
+        Navigator.of(context).popUntil((route) => route.isFirst);
+        Navigator.push(context, MaterialPageRoute(builder: (context) {
+          return FrontPage();
+        }));
+      } else {
+        print("Error in response: $responseData");
+        showErrorMessage("response error");
+      }
+    } else {
+      print("Error: Status Code - ${response.statusCode}");
+      print("Error: Reason Phrase - ${response.reasonPhrase}");
+      showErrorMessage("response error");
+    }
+
+    if (_selectedFile != null) {
+      await uploadFile(_selectedFile!);
+      await uploadFile(_selectedFileaadhar!);
+      await uploadFile(_selectedFilepassport!);
+      await uploadFile(_selectedFilesign!);
+    }
+
+  } catch (e) {
+    print("Exception: ${e.toString()}");
+    showErrorMessage("An error occurred: ${e.toString()}");
+  }
+}
 
   Future<void> uploadFile(File file) async {
     try {
@@ -291,42 +304,78 @@ class _RegistrationForDoctorsPageState extends State<RegistrationForDoctors> {
     }
   }
 
-  // Future<void> _requestPermission(Permission permission) async {
-  //   PermissionStatus status = await permission.request();
-  //   if (status.isGranted) {
-  //     print(status);
-  //     print('${permission.toString()} permission granted');
-  //   } else {
-  //     print(status);
-  //     print('${permission.toString()} permission denied');
-  //   }
-  // }
+  Future<void> _requestPermission(Permission permission) async {
+    PermissionStatus status = await permission.request();
+    if (status.isGranted) {
+      print(status);
+      print('${permission.toString()} permission granted');
+    } else {
+      print(status);
+      print('${permission.toString()} permission denied');
+    }
+  }
 
-//   Future<bool> _handleLocationPermission() async {
-//   LocationPermission permission;
+  Future<bool> _handleLocationPermission() async {
+  LocationPermission permission;
   
-//   permission = await Geolocator.checkPermission();
-//   if (permission == LocationPermission.denied) {
-//     permission = await Geolocator.requestPermission();
-//     if (permission == LocationPermission.denied) {
-//       // Permissions are denied, next time you could try
-//       // requesting permissions again (this is also where
-//       // Android's shouldShowRequestPermissionRationale
-//       // returned true. According to Android guidelines
-//       // your App should show an explanatory UI now.
-//       return false;
-//     }
-//   }
+  permission = await Geolocator.checkPermission();
+  if (permission == LocationPermission.denied) {
+    permission = await Geolocator.requestPermission();
+    if (permission == LocationPermission.denied) {
+      // Permissions are denied, next time you could try
+      // requesting permissions again (this is also where
+      // Android's shouldShowRequestPermissionRationale
+      // returned true. According to Android guidelines
+      // your App should show an explanatory UI now.
+      return false;
+    }
+  }
   
-//   if (permission == LocationPermission.deniedForever) {
-//     // Permissions are denied forever, handle appropriately.
-//     return false;
-//   } 
+  if (permission == LocationPermission.deniedForever) {
+    // Permissions are denied forever, handle appropriately.
+    return false;
+  } 
   
-//   // When we reach here, permissions are granted and we can
-//   // continue accessing the position of the device.
-//   return true;
-// }
+  // When we reach here, permissions are granted and we can
+  // continue accessing the position of the device.
+  return true;
+}
+
+Future<void> getCurrentLocation() async {
+    try {
+      Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high,
+      );
+
+      List<Placemark> placemarks =
+          await placemarkFromCoordinates(position.latitude, position.longitude);
+      List<String> mainAddresses = [];
+
+      for (Placemark placemark in placemarks) {
+        String name = placemark.name ?? "";
+        String street = placemark.street ?? "";
+
+        // Concatenate the name and street into a single string
+        String mainAddress = "$name";
+
+        // Add the main address to the list
+        mainAddresses.add(mainAddress);
+      }
+      // AIzaSyCIKgGZYd9RDjxLrSnSTj8AVw9Dwe43LII
+
+      // print(placemarkFromCoordinates(position.latitude, position.longitude).toString());
+      if (position != null) {
+        _latitudeController.text = position.latitude.toString();
+        
+        _longitudeController.text = position.longitude.toString();
+        String concatenatedAddresses = mainAddresses.join(' , ');
+        print(concatenatedAddresses);
+        _LocationController.text = '$concatenatedAddresses';
+      } else {}
+    } catch (e) {
+      print("Error getting location: $e");
+    }
+  }
 
 // Future<void> getCurrentLocation() async {
 //     final hasPermission = await _handleLocationPermission();
@@ -363,40 +412,40 @@ class _RegistrationForDoctorsPageState extends State<RegistrationForDoctors> {
 
 
 
-  Future<void> getCurrentLocation() async {
-    try {
-      Position position = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation,
-      );
+  // Future<void> getCurrentLocation() async {
+  //   try {
+  //     Position position = await Geolocator.getCurrentPosition(
+  //       desiredAccuracy: LocationAccuracy.bestForNavigation,
+  //     );
 
-      List<Placemark> placemarks =
-          await placemarkFromCoordinates(position.latitude, position.longitude);
-      List<String> mainAddresses = [];
+  //     List<Placemark> placemarks =
+  //         await placemarkFromCoordinates(position.latitude, position.longitude);
+  //     List<String> mainAddresses = [];
 
-      for (Placemark placemark in placemarks) {
-        String name = placemark.name ?? "";
-        String street = placemark.street ?? "";
+  //     for (Placemark placemark in placemarks) {
+  //       String name = placemark.name ?? "";
+  //       String street = placemark.street ?? "";
 
-        // Concatenate the name and street into a single string
-        String mainAddress = "$name";
+  //       // Concatenate the name and street into a single string
+  //       String mainAddress = "$name";
 
-        // Add the main address to the list
-        mainAddresses.add(mainAddress);
-      }
-      // AIzaSyCIKgGZYd9RDjxLrSnSTj8AVw9Dwe43LII
+  //       // Add the main address to the list
+  //       mainAddresses.add(mainAddress);
+  //     }
+  //     // AIzaSyCIKgGZYd9RDjxLrSnSTj8AVw9Dwe43LII
 
-      // print(placemarkFromCoordinates(position.latitude, position.longitude).toString());
-      if (position != null) {
-        _latitudeController.text = position.latitude.toString();
-        _longitudeController.text = position.longitude.toString();
-        String concatenatedAddresses = mainAddresses.join(' , ');
-        print(concatenatedAddresses);
-        _LocationController.text = '$concatenatedAddresses';
-      } else {}
-    } catch (e) {
-      print("Error getting location: $e");
-    }
-  }
+  //     // print(placemarkFromCoordinates(position.latitude, position.longitude).toString());
+  //     if (position != null) {
+  //       _latitudeController.text = position.latitude.toString();
+  //       _longitudeController.text = position.longitude.toString();
+  //       String concatenatedAddresses = mainAddresses.join(' , ');
+  //       print(concatenatedAddresses);
+  //       _LocationController.text = '$concatenatedAddresses';
+  //     } else {}
+  //   } catch (e) {
+  //     print("Error getting location: $e");
+  //   }
+  // }
 
   final format = DateFormat("yyyy-MM-dd");
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -503,8 +552,18 @@ class _RegistrationForDoctorsPageState extends State<RegistrationForDoctors> {
         false;
   }
 
+    @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+    _requestPermission(Permission.location).then((value){
+      value = _blockController.text  ;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    print("block controller value: ${_blockController.text}");
     Color themeColor = Theme.of(context).primaryColor;
     return PopScope(
       canPop: false,
@@ -878,7 +937,7 @@ SizedBox(height: 16),
                       border: OutlineInputBorder(),
                       suffixIcon: InkWell(
                         onTap: () {
-                          // _requestPermission(Permission.location);
+                          
                           showModalBottomSheet(
                             context: context,
                             builder: (BuildContext context) {
@@ -897,8 +956,8 @@ SizedBox(height: 16),
                             Icon(Icons.location_searching, color: themeColor),
                       ),
                     ),
-                    // readOnly: true,
-                    keyboardType: TextInputType.text,
+                    readOnly: true,
+                    // keyboardType: TextInputType.text,
                     validator: (value) {
                       if (value == null || value.isEmpty) {
                         return 'Location is required';
@@ -933,6 +992,8 @@ SizedBox(height: 16),
                     controller: _any_experienceController,
                     labelText: "Any Experience",
                     icon: Icons.work,
+                    keyboardType: TextInputType.number,
+                    
                   ),
                   SizedBox(height: 16),
 
@@ -1076,8 +1137,8 @@ SizedBox(height: 16),
                         // storeSelectedValue(_selectedValue);
                       });
                     },
-                    min: 15.0,
-                    max: 30.0,
+                    min: 1.0,
+                    max: 15.0,
                     divisions: 15,
                     label: _selectedValue.round().toString(),
                     activeColor: Colors.orange,
@@ -1130,8 +1191,9 @@ SizedBox(height: 16),
                               selectedJobTypeOption,
                               selectedCoursesOption,
                               _LocationController.text.toString(),
-                              "0.0",
-                              "0.0",
+                              _longitudeController.text,
+                              _latitudeController.text,
+                              
                               // _selectedFile,
                               _visitfeesController.text.toString(),
                               _ownclinicController.text.toString(),

@@ -1,5 +1,6 @@
 
 class CattleListModel {
+  // final int? primaryKey;
   final String sellingProductCategory;
   final String typeOfCattle;
   final String cattleBreed;
@@ -8,12 +9,13 @@ class CattleListModel {
   final String isOnHeat;
   final String heatPeriod;
   final String isOnPregnant;
-  final String pregnantPeriod;
+  final String? pregnantPeriod;
   final double nowMilkPerDay;
   final double milkCapacityPerDay;
   final List<String> classifiedAttachments;
 
   CattleListModel({
+    // this.primaryKey,
     required this.sellingProductCategory,
     required this.typeOfCattle,
     required this.cattleBreed,
@@ -22,7 +24,7 @@ class CattleListModel {
     required this.isOnHeat,
     required this.heatPeriod,
     required this.isOnPregnant,
-    required this.pregnantPeriod,
+    this.pregnantPeriod,
     required this.nowMilkPerDay,
     required this.milkCapacityPerDay,
     required this.classifiedAttachments,
@@ -44,4 +46,24 @@ class CattleListModel {
       'classifed_attachments': classifiedAttachments,
     };
   }
+
+  factory CattleListModel.fromJson(Map<String, dynamic> json) {
+  return CattleListModel(
+    // primaryKey: json['primarykey'],
+    sellingProductCategory: json['selling_product_category'],
+    typeOfCattle: json['type_of_cattel'],
+    cattleBreed: json['cattel_breed'],
+    age: json['age'],
+    noOfHeat: json['no_of_heat'],
+    isOnHeat: json['is_on_heat'],
+    heatPeriod: json['heat_period'],
+    isOnPregnant: json['is_on_pregnant'],
+    nowMilkPerDay: json['now_milk_per_day'],
+    milkCapacityPerDay: json['milk_capacity_per_day'],
+    classifiedAttachments: json['classifed_attachments'] != null
+        ? List<String>.from(json['classifed_attachments'].map((item) => item['pic_or_video'].toString()))
+        : [], // Assuming it's a List<String>
+  );
+}
+
 }

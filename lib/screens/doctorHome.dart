@@ -42,19 +42,7 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
         sid: widget.sid,
       ),
       appBar: AppBar(
-        title: Column(
-          children: [
-            Text(
-              Localization.of(context)!.translate('location') ?? "",
-              style: TextStyle(fontSize: 14, color: Colors.black),
-            ),
-            Text(
-              Localization.of(context)!.translate('gujarat_ind')!,
-              style: TextStyle(fontSize: 16, color: Colors.black),
-            )
-          ],
-        ),
-        centerTitle: true,
+        
         actions: [
           IconButton(
             onPressed: () {
@@ -220,87 +208,87 @@ class _DoctorHomePageState extends State<DoctorHomePage> {
               SizedBox(
                 height: 12.5,
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "Nearby Consultants",
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontWeight: FontWeight.w700,
-                        fontSize: 16),
-                  ),
-                  Text(
-                    "See All",
-                    style: TextStyle(
-                        color: Color(0xfffe924b),
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        "assets/images/cow1.png",
-                        width: MediaQuery.sizeOf(context).width * 0.4,
-                      ),
-                      SizedBox(
-                        height: 7.5,
-                      ),
-                      Text(
-                        "Breed Name\n(Vaccinated)",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        "Rs.80,000",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xfffe924b),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Image.asset(
-                        "assets/images/cow2.png",
-                        width: MediaQuery.sizeOf(context).width * 0.4,
-                      ),
-                      SizedBox(
-                        height: 7.5,
-                      ),
-                      Text(
-                        "Breed Name\n(Vaccinated)",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      Text(
-                        "Rs.80,000",
-                        style: TextStyle(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                          color: Color(0xfffe924b),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              )
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //   children: [
+              //     Text(
+              //       "Nearby Consultants",
+              //       style: TextStyle(
+              //           color: Colors.black,
+              //           fontWeight: FontWeight.w700,
+              //           fontSize: 16),
+              //     ),
+              //     Text(
+              //       "See All",
+              //       style: TextStyle(
+              //           color: Color(0xfffe924b),
+              //           fontWeight: FontWeight.w500,
+              //           fontSize: 12),
+              //     ),
+              //   ],
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              //   children: [
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Image.asset(
+              //           "assets/images/cow1.png",
+              //           width: MediaQuery.sizeOf(context).width * 0.4,
+              //         ),
+              //         SizedBox(
+              //           height: 7.5,
+              //         ),
+              //         Text(
+              //           "Breed Name\n(Vaccinated)",
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.w600,
+              //           ),
+              //         ),
+              //         Text(
+              //           "Rs.80,000",
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.bold,
+              //             color: Color(0xfffe924b),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //     Column(
+              //       crossAxisAlignment: CrossAxisAlignment.start,
+              //       children: [
+              //         Image.asset(
+              //           "assets/images/cow2.png",
+              //           width: MediaQuery.sizeOf(context).width * 0.4,
+              //         ),
+              //         SizedBox(
+              //           height: 7.5,
+              //         ),
+              //         Text(
+              //           "Breed Name\n(Vaccinated)",
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.w600,
+              //           ),
+              //         ),
+              //         Text(
+              //           "Rs.80,000",
+              //           style: TextStyle(
+              //             fontSize: 14,
+              //             fontWeight: FontWeight.bold,
+              //             color: Color(0xfffe924b),
+              //           ),
+              //         ),
+              //       ],
+              //     ),
+              //   ],
+              // )
             ],
           ),
         ),

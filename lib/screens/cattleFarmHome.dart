@@ -1,10 +1,10 @@
 import 'dart:convert';
-
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:pashusevak/models/bannerList.dart';
+import 'package:http/http.dart' as http;
 import 'package:pashusevak/screens/cattleListingForm.dart';
+import 'package:pashusevak/screens/docto_detail_screeen.dart';
 import 'package:pashusevak/screens/emergencyCare.dart';
 import 'package:pashusevak/screens/healthReports.dart';
 import 'package:pashusevak/screens/pharmacyForFarmers.dart';
@@ -17,7 +17,6 @@ import 'package:pashusevak/widgets/farmerSideDrawer.dart';
 import 'package:pashusevak/widgets/healthReports.dart';
 import 'package:pashusevak/widgets/nearbyConsultants.dart';
 import 'package:pashusevak/widgets/serviceTiles.dart';
-import 'package:http/http.dart' as http;
 
 class CattleFarmHomePage extends StatefulWidget {
   final String sid;
@@ -28,73 +27,98 @@ class CattleFarmHomePage extends StatefulWidget {
 }
 
 class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
-
-  late GoogleMapController mapController;
-  BitmapDescriptor? customMarkerIcon;
-  int selectedContainerIndex = 0;
-
-  static const LatLng sourceLocation = LatLng(25.3960, 68.3578);
-  LatLng destination = LatLng(25.3960, 68.3578);
-
-  final List<Marker> _marker = <Marker>[];
-  final List<LatLng> _lating = <LatLng>[
-    LatLng(25.3960, 68.3578),
-    LatLng(25.3960, 68.3578),
-  ];
-  List<String> images = ['assets.images/man.png'];
-
-  loadData() {
-    for (int i = 0; i < images.length; i++) {
-      _marker.add(
-        Marker(
-            markerId: MarkerId(i.toString()),
-            position: _lating[i],
-            icon: BitmapDescriptor.defaultMarker,
-            infoWindow: InfoWindow(title: "This is title mark")),
-      );
-      setState(() {});
-    }
-  }
+  Position? _currentPosition;
+  List<Map<String, dynamic>> _doctors = [];
+  bool _loading = true;
+  GoogleMapController? mapController;
+  LatLng? _userLocation;
 
   @override
   void initState() {
     super.initState();
-
-    fetchDestination();
-  }
-
-  Future<void> fetchDestination() async {
-    final response = await http.get(
-        Uri.parse('http://43.205.23.114/api/method/oymom.api.get_doctor_list'));
-
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      final doctor = data['message'][0];
-      final double lat = doctor['latitude'];
-      final double lng = doctor['longitude'];
-
-      setState(() {
-        destination = LatLng(lat, lng);
-      });
-    } else {
-      print('Failed to load destination');
-    }
+    _getCurrentLocation().then((_) {
+      _fetchDoctors();
+    });
   }
 
   void _onMapCreated(GoogleMapController controller) {
     mapController = controller;
+    if (_userLocation != null) {
+      mapController?.animateCamera(
+        CameraUpdate.newLatLngZoom(_userLocation!, 12.0),
+      );
+    }
   }
 
-  @override
-  void dispose() {
-    mapController.dispose();
-    super.dispose();
+  Future<void> _getCurrentLocation() async {
+    try {
+      _currentPosition = await Geolocator.getCurrentPosition(
+          desiredAccuracy: LocationAccuracy.high);
+    } catch (e) {
+      print('Error getting location: $e');
+      // Optionally, you can use a fallback location here
+      setState(() {
+        _loading = false; // Ensure loading stops even if location fails
+      });
+    }
   }
 
-  void selectContainer(int index) {
-    setState(() {
-      selectedContainerIndex = index;
-    });
+  Future<void> _fetchDoctors() async {
+    try {
+      final response = await http.get(Uri.parse(
+          'http://43.205.23.114/api/method/oymom.api.get_doctor_list'));
+
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        final List<dynamic> doctorList = data['message'];
+
+        final List<Map<String, dynamic>> filteredDoctors =
+            doctorList.where((doctor) {
+          final double lat = doctor['latitude'];
+          final double lng = doctor['longitude'];
+          final double distanceInMeters = Geolocator.distanceBetween(
+              _currentPosition!.latitude,
+              _currentPosition!.longitude,
+              lat,
+              lng);
+          return distanceInMeters <= 15000;
+        }).map((doctor) {
+          return {
+            'name': doctor['name'],
+            'latitude': doctor['latitude'],
+            'longitude': doctor['longitude'],
+            'doctor_name': doctor['doctor_name'],
+            'any_experiance': doctor['any_experiance'],
+            'visit_fees': doctor['visit_fees'],
+            'course': doctor['course'],
+            'mobile': doctor['mobile'],
+            'email': doctor['email'],
+            'job_type': doctor['job_type'],
+            'doctor_id': doctor['doctor_id'],
+            'location': doctor['location'],
+            'last_name': doctor['last_name'],
+            'state': doctor['state'],
+            'district': doctor['district'],
+            'own_clinic_visit_fees': doctor['own_clinic_visit_fees']
+          };
+        }).toList();
+
+        setState(() {
+          _doctors = filteredDoctors;
+          _loading = false;
+        });
+      } else {
+        print('Failed to load doctors');
+        setState(() {
+          _loading = false;
+        });
+      }
+    } catch (e) {
+      print('Error fetching doctors: $e');
+      setState(() {
+        _loading = false;
+      });
+    }
   }
 
   @override
@@ -142,7 +166,6 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                         labelStyle: TextStyle(fontWeight: FontWeight.bold),
                         unselectedLabelColor: Colors.black,
                         indicatorSize: TabBarIndicatorSize.tab,
-                        // labelPadding: EdgeInsets.symmetric(horizontal: 10),
                         indicator: BoxDecoration(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(25),
@@ -158,77 +181,38 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                         ],
                       ),
                     ),
-                    // Expanded(
-                    //   child: TabBarView(
-                    //     children: [
-                    //       Center(
-                    //         child: Text("data bohottttt h"),
-                    //       ),
-                    //       Center(
-                    //         child: Text("data bohottttt h"),
-                    //       )
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 ),
               )),
         ),
         body: TabBarView(children: [
           SingleChildScrollView(
-            scrollDirection: Axis.vertical,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-
                 Container(
-                    height: MediaQuery.of(context).size.height * 0.4,
-                    child: GoogleMap(
-                      onMapCreated: _onMapCreated,
-                      initialCameraPosition: const CameraPosition(
-                        target: sourceLocation,
-                        zoom: 11.0,
-                      ),
-                      markers: Set<Marker>.of(_marker),
+                  height: MediaQuery.of(context).size.height * 0.4,
+                  child: GoogleMap(
+                    onMapCreated: _onMapCreated,
+                    initialCameraPosition: const CameraPosition(
+                      target: LatLng(25.3960, 68.3578), // Default location
+                      zoom: 11.0,
                     ),
+                    markers: _userLocation != null
+                        ? {
+                            Marker(
+                              markerId: MarkerId('user_location'),
+                              position: _userLocation!,
+                              infoWindow: InfoWindow(title: 'Your Location'),
+                              icon: BitmapDescriptor.defaultMarkerWithHue(
+                                  BitmapDescriptor.hueRed),
+                            ),
+                          }
+                        : {},
                   ),
-
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 23.5, vertical: 12),
-                //   child: FutureBuilder<List<Message>>(
-                //     future: NetworkApiServices().fetchBanners(),
-                //     builder: (context, snapshot) {
-                //       return CarouselSlider(
-                //           items: snapshot.data?.map((banner) {
-                //             return Builder(
-                //               builder: (BuildContext context) {
-                //                 return Container(
-                //                   width: MediaQuery.of(context).size.width,
-                //                   margin: EdgeInsets.symmetric(horizontal: 5.0),
-                //                   child: Image.network(
-                //                     "http://43.205.23.114/${banner.banner}",
-                //                     fit: BoxFit.cover,
-                //                   ),
-                //                   // child: Text(banner.sequence.toString()),
-                //                 );
-                //               },
-                //             );
-                //           }).toList(),
-                //           options: CarouselOptions(
-                //             viewportFraction: 1,
-                //             autoPlay: true,
-                //           ));
-                //     },
-                //   ),
-                // ),
-
-                // Padding(
-                //   padding: EdgeInsets.symmetric(horizontal: 23.5, vertical: 12),
-                //   child: Image.asset("assets/images/carouselPic1.png"),
-                // ),
-                SizedBox(
-                  height: 15,
                 ),
+                // Services section
+                SizedBox(height: 15),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23.5),
                   child: Text(
@@ -239,9 +223,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                         fontSize: 15.5),
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23),
                   child: Row(
@@ -267,8 +249,8 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                               context,
                               MaterialPageRoute(
                                   builder: (context) => EmergencyCare(
-                                    sid: widget.sid,
-                                  )));
+                                        sid: widget.sid,
+                                      )));
                         },
                       ),
                       ServiceTiles(
@@ -286,27 +268,24 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 8,
-                ),
+                SizedBox(height: 8),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       ServiceTiles(
-                    image: "assets/images/wallet.png",
-                    // name: Localization.of(context)!.translate('wallet_facility')!,
-                    name: "Wallet",
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WalletScreen(
-                                    sid: widget.sid,
-                                  )));
-                    },
-                  ),
+                        image: "assets/images/wallet.png",
+                        name: "Wallet",
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => WalletScreen(
+                                        sid: widget.sid,
+                                      )));
+                        },
+                      ),
                       ServiceTiles(
                         image: "assets/images/vetLabs.png",
                         name: "Vet Labs",
@@ -332,9 +311,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23.5),
                   child: Row(
@@ -357,16 +334,62 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 23.5),
-                  child: NearbyConsultants(),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
+                SizedBox(height: 10),
+                _loading
+                    ? Center(child: CircularProgressIndicator())
+                    //         'name': doctor['name'],
+                    // 'latitude': doctor['latitude'],
+                    // 'longitude': doctor['longitude'],
+                    // 'doctor_name' : doctor['doctor_name'],
+                    // 'any_experiance' : doctor['any_experiance'],
+                    // 'visit_fees' : doctor['visit_fees']
+                    : _doctors.isEmpty
+                        ? Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 23.5),
+                            child: Text(
+                              "No doctor registered near your area",
+                              style: TextStyle(fontSize: 16, color: Colors.red),
+                            ),
+                          )
+                        : Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 23.5),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: _doctors.map((doctor) {
+                                print("All doctor details $doctor");
+                                return Card(
+                                  elevation: 1.5,
+                                  child: ListTile(
+                                    onTap: () {
+                                      Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  DoctorDetailsScreen(
+                                                      doctorData: doctor,
+                                                      sid: widget.sid)));
+                                    },
+                                    title: Text(doctor['doctor_name']),
+                                    subtitle: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                          "Experience: ${doctor['any_experiance']} years",
+                                        ),
+                                        Text(
+                                          "Visit Fees: ₹${doctor['visit_fees'].toString()}",
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                SizedBox(height: 20),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 23.5),
                   child: Row(
@@ -389,9 +412,7 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                     ],
                   ),
                 ),
-                SizedBox(
-                  height: 10,
-                ),
+                SizedBox(height: 10),
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 10),
                   child: HealthReports(),
@@ -399,8 +420,6 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
               ],
             ),
           ),
-
-          // sell our service
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 12),
             child: Column(
@@ -427,10 +446,61 @@ class _CattleFarmHomePageState extends State<CattleFarmHomePage> {
                 SizedBox(
                   height: 20,
                 ),
-                
+
+                // FutureBuilder(
+                //   future: NetworkApiServices().cattleListItems(widget.sid),
+                //   builder: (context, snapshot) {
+                //     if (!snapshot.hasData) {
+                //       return Center(
+                //         child: Text("No Cattle Listing Available"),
+                //       );
+                //     } else if (snapshot.connectionState ==
+                //         ConnectionState.waiting) {
+                //       return Center(child: Text("Data is being loaded...."));
+                //     } else if (snapshot.hasError || snapshot.data == null) {
+                //       return Center(
+                //         child: Text("SID expired, Login again"),
+                //       );
+                //     }
+
+                //     return ListView.builder(
+                //         shrinkWrap: true,
+                //         scrollDirection: Axis.vertical,
+                //         itemCount: snapshot.data!.length,
+                //         itemBuilder: (context, index) {
+                //           String imageUrl = (snapshot
+                //                           .data![index].classifiedAttachments !=
+                //                       null &&
+                //                   snapshot.data![index].classifiedAttachments
+                //                       .isNotEmpty)
+                //               ? snapshot.data![index].classifiedAttachments[0]
+                //               : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxdAOY_-vITFVI-ej84s2U_ErxhOly-z3y_Q&s";
+
+                //           print(
+                //               "type of cattle: ${snapshot.data![index].typeOfCattle}");
+                //           return ListTile(
+                //             leading: Image.network(
+                //               "http://43.205.23.114${imageUrl}",
+                //               width: 50, // Adjust size as needed
+                //               height: 50,
+                //               fit: BoxFit.cover,
+                //               errorBuilder: (context, error, stackTrace) {
+                //                 return Image.network(
+                //                   "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTxdAOY_-vITFVI-ej84s2U_ErxhOly-z3y_Q&s", // Fallback asset image if network image fails
+                //                   width: 50,
+                //                   height: 50,
+                //                   fit: BoxFit.cover,
+                //                 );
+                //               },
+                //             ),
+                //             // title: Text(snapshot.data![index].typeOfCattle),
+                //           );
+                //         });
+                //   },
+                // )
               ],
             ),
-          )
+          ),
         ]),
       ),
     );
