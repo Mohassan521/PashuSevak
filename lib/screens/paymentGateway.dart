@@ -13,7 +13,9 @@ class PaymentGateway extends StatelessWidget {
   final double visitFees;
   final String appt_time;
   final String farmer_email;
-  const PaymentGateway({super.key, required this.doctorName, required this.service_unit, required this.visitFees, required this.appt_time, required this.farmer_email, required this.doctorId, required this.selectedDate, required this.sid});
+  final double lat;
+  final double lon;
+  const PaymentGateway({super.key, required this.doctorName, required this.service_unit, required this.visitFees, required this.appt_time, required this.farmer_email, required this.doctorId, required this.selectedDate, required this.sid, required this.lat, required this.lon});
 
   @override
   Widget build(BuildContext context) {
@@ -84,12 +86,20 @@ class PaymentGateway extends StatelessWidget {
                     "Confirm Appointment",
                     style: TextStyle(color: Colors.white),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
+                    final walletValue = await NetworkApiServices().getWalletBalance(sid);
+                    // print("Wallet balance: $walletValue");
+                    if(walletValue < visitFees){
+                      Utils().toastMessage("You dont have enough balance to book this appointment");
+                    }
+                    else {
                     String formattedDate = DateFormat('yyyy-MM-dd').format(selectedDate);
                     NetworkApiServices().createAppointment(doctorId, formattedDate, farmer_email, service_unit, appt_time, sid).then((value){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedAnyTask(message: "Appointment Created", sid: sid,)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => CompletedAnyTask(message: "Appointment Created", sid: sid,lat: lat,lon: lon,)));
                     });
                     print("After appointment creation: $doctorId, $selectedDate, $farmer_email, $service_unit, $appt_time");
+                    }
+
                   },
                 )
           ],

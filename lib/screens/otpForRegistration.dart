@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:pashusevak/screens/registrationForDoctors.dart';
 import 'package:pashusevak/screens/registrationForFarmers.dart';
+import 'package:pashusevak/screens/roleSelection.dart';
 import 'package:pinput/pinput.dart';
 
 class OTPPageForRegstration extends StatefulWidget {
@@ -69,26 +70,27 @@ class _OTPPageForRegstrationState extends State<OTPPageForRegstration> {
 
       if (message == 'OTP verified successfully') {
         showSuccessMessage(message);
+        Navigator.push(context, MaterialPageRoute(builder: (context) => RoleSelection(email: widget.emailController,mobile_no: widget.mobileController,)));
         // Navigator.of(context).pushAndRemoveUntil(
         //   MaterialPageRoute(builder: (context) => LoginPage()),
         //       (Route<dynamic> route) => false,
         // );
         // Successful OTP verification, navigate to the next screen
-        if(widget.role == "Farmer"){
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return RegistrationForFarmer(
-              emailController: widget.emailController, mobileController: widget.mobileController
-          );
-        }));
+        // if(widget.role == "Farmer"){
+        //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return RegistrationForFarmer(
+        //       emailController: widget.emailController, mobileController: widget.mobileController
+        //   );
+        // }));
           
-        }
-        else if(widget.role == "Doctor"){
-          Navigator.push(context, MaterialPageRoute(builder: (context) {
-          return RegistrationForDoctors(
-              emailController: widget.emailController, mobileController: widget.mobileController
-          );
-        }));
-        }
+        // }
+        // else if(widget.role == "Doctor"){
+        //   Navigator.push(context, MaterialPageRoute(builder: (context) {
+        //   return RegistrationForDoctors(
+        //       emailController: widget.emailController, mobileController: widget.mobileController
+        //   );
+        // }));
+        // }
         
       } else {
         // OTP verification failed, show an error message to the user

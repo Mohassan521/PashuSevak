@@ -102,51 +102,6 @@ class _RegisterPageState extends State<RegisterPage> {
                     border: OutlineInputBorder(),
                   ),
                 ),
-                SizedBox(height: 17.5),
-                Container(
-                        height: MediaQuery.sizeOf(context).height * 0.055,
-                        padding: EdgeInsets.only(left: 9),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.5),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1,
-                          ),
-                        ),
-                        child: DropdownButton<String>(
-                          alignment: Alignment.center,
-                          isExpanded: true,
-                          value: role,
-        
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              role = newValue ?? role;
-                            });
-                          },
-                          items: [
-                            DropdownMenuItem<String>(
-                                value: "",
-                                child: Center(
-                                    child: Text(
-                                  'Select role',
-                                  style: TextStyle(fontSize: 12),
-                                ))),
-                            DropdownMenuItem<String>(
-                                value: 'Farmer',
-                                child: Center(
-                                    child: Text(
-                                  'Farmer',
-                                  style: TextStyle(fontSize: 12),
-                                ))),
-                            DropdownMenuItem<String>(
-                                value: 'Doctor',
-                                child: Center(
-                                    child: Text('Doctor',
-                                        style: TextStyle(fontSize: 12)))),
-                          ],
-                        ),
-                      ),
                 // SizedBox(
                 //   height: 15,
                 // ),

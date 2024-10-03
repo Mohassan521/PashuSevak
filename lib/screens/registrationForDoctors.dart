@@ -315,33 +315,62 @@ class _RegistrationForDoctorsPageState extends State<RegistrationForDoctors> {
     }
   }
 
-  Future<bool> _handleLocationPermission() async {
-  LocationPermission permission;
+//   Future<bool> _handleLocationPermission() async {
+//   LocationPermission permission;
   
-  permission = await Geolocator.checkPermission();
-  if (permission == LocationPermission.denied) {
-    permission = await Geolocator.requestPermission();
-    if (permission == LocationPermission.denied) {
-      // Permissions are denied, next time you could try
-      // requesting permissions again (this is also where
-      // Android's shouldShowRequestPermissionRationale
-      // returned true. According to Android guidelines
-      // your App should show an explanatory UI now.
-      return false;
-    }
-  }
+//   permission = await Geolocator.checkPermission();
+//   if (permission == LocationPermission.denied) {
+//     permission = await Geolocator.requestPermission();
+//     if (permission == LocationPermission.denied) {
+//       // Permissions are denied, next time you could try
+//       // requesting permissions again (this is also where
+//       // Android's shouldShowRequestPermissionRationale
+//       // returned true. According to Android guidelines
+//       // your App should show an explanatory UI now.
+//       return false;
+//     }
+//   }
   
-  if (permission == LocationPermission.deniedForever) {
-    // Permissions are denied forever, handle appropriately.
-    return false;
-  } 
+//   if (permission == LocationPermission.deniedForever) {
+//     // Permissions are denied forever, handle appropriately.
+//     return false;
+//   } 
   
-  // When we reach here, permissions are granted and we can
-  // continue accessing the position of the device.
-  return true;
-}
+//   // When we reach here, permissions are granted and we can
+//   // continue accessing the position of the device.
+//   return true;
+// }
 
 Future<void> getCurrentLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Check if location services are enabled
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // If not, request user to enable location services
+      _showLocationServiceDialog(context);
+      return; // Stop further execution if location services are disabled
+    }
+
+    // Check location permission
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      // Request permission if denied
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        print("Location permissions are denied.");
+        return; // Stop execution if permission is denied
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Permissions are permanently denied, handle appropriately
+      print("Location permissions are permanently denied.");
+      return;
+    }
+
+    // Fetch the location when services are enabled and permission is granted
     try {
       Position position = await Geolocator.getCurrentPosition(
         desiredAccuracy: LocationAccuracy.high,
@@ -354,30 +383,46 @@ Future<void> getCurrentLocation() async {
       for (Placemark placemark in placemarks) {
         String name = placemark.name ?? "";
         String street = placemark.street ?? "";
-
-        // Concatenate the name and street into a single string
         String mainAddress = "$name";
-
-        // Add the main address to the list
         mainAddresses.add(mainAddress);
       }
-      // AIzaSyCIKgGZYd9RDjxLrSnSTj8AVw9Dwe43LII
 
-      // print(placemarkFromCoordinates(position.latitude, position.longitude).toString());
+      // Update the text fields with the fetched location
       if (position != null) {
         _latitudeController.text = position.latitude.toString();
-        
         _longitudeController.text = position.longitude.toString();
         String concatenatedAddresses = mainAddresses.join(' , ');
         print(concatenatedAddresses);
         _LocationController.text = '$concatenatedAddresses';
-      } else {}
+      }
     } catch (e) {
       print("Error getting location: $e");
     }
   }
 
-// Future<void> getCurrentLocation() async {
+  void _showLocationServiceDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Location Service Disabled'),
+          content: Text(
+              'Location services are disabled. Please enable location to continue.'),
+          actions: <Widget>[
+            TextButton(
+              child: Text('OK'),
+              onPressed: () {
+                Navigator.of(context).pop();
+                Geolocator.openLocationSettings(); // Open location settings
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
+    
+  // Future<void> getCurrentLocation() async {
 //     final hasPermission = await _handleLocationPermission();
 //     if (!hasPermission) return;
 
@@ -472,6 +517,7 @@ Future<void> getCurrentLocation() async {
 
   String selectedJobTypeOption = 'company';
   String selectedCoursesOption = 'BVSC';
+  String selectedDiagnosis = "Cattle";
   String selectedare_youOption = 'DOCTOR';
   String selectedservice_type = 'Paid';
   String selectedhave_bike = 'No';
@@ -517,10 +563,27 @@ Future<void> getCurrentLocation() async {
   }
 
   void onLocationSelected(String location) {
+    setState(() {      
     _LocationController.text = location;
+    });
   }
 
-  Future<bool> _onBackPressed(BuildContext context) async {
+    @override
+  void initState() {
+    super.initState();
+    getCurrentLocation();
+    // _requestPermission(Permission.location).then((value){
+    //   setState(() {
+    //     value = _blockController.text  ;  
+    //   });
+      
+    // });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
+    Future<bool> _onBackPressed() async {
     return await showDialog(
           context: context,
           builder: (context) => AlertDialog(
@@ -540,7 +603,9 @@ Future<void> getCurrentLocation() async {
                 ),
               ),
               TextButton(
-                onPressed: () => Navigator.of(context).pop(true),
+                onPressed: () {
+                  Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FrontPage()));
+                },
                 child: Text(
                   'Yes',
                   style: TextStyle(fontSize: 20),
@@ -552,34 +617,21 @@ Future<void> getCurrentLocation() async {
         false;
   }
 
-    @override
-  void initState() {
-    super.initState();
-    getCurrentLocation();
-    _requestPermission(Permission.location).then((value){
-      value = _blockController.text  ;
-    });
-  }
 
-  @override
-  Widget build(BuildContext context) {
     print("block controller value: ${_blockController.text}");
     Color themeColor = Theme.of(context).primaryColor;
-    return PopScope(
-      canPop: false,
-      onPopInvoked: (value) {
-        _onBackPressed(context);
-      } ,
+    return WillPopScope(
+      onWillPop: () => _onBackPressed(),
       child: Scaffold(
           body: Scaffold(
         appBar: AppBar(
           iconTheme: IconThemeData(color: Colors.white),
-          title: Text("Doctor Registration", style: TextStyle(color: Colors.white),),
+          title: Text("Emergency Care Service Registration", style: TextStyle(color: Colors.white),),
           backgroundColor: Colors.orange,
           centerTitle: true,
         ),
         body: Padding(
-          padding: EdgeInsets.only(left: 16, right: 16),
+          padding: EdgeInsets.only(left: 5, right: 5),
           child: SingleChildScrollView(
             child: Form(
               key: _formKey,
@@ -704,7 +756,7 @@ Future<void> getCurrentLocation() async {
                           ),
                           SizedBox(width: 10),
                           Text(
-                            "Job Type",
+                            "Type Of Job",
                             style: TextStyle(fontSize: 18),
                           ),
                         ],
@@ -781,7 +833,7 @@ Future<void> getCurrentLocation() async {
                   SizedBox(height: 16),
                   _buildTextField(
                     controller: _doctornameController,
-                    labelText: "Doctor Name",
+                    labelText: "First Name",
                     icon: Icons.person,
                   ),
                   SizedBox(height: 16),
@@ -913,7 +965,7 @@ SizedBox(height: 16),
                   TextFormField(
                     controller: _blockController,
                     decoration: InputDecoration(
-                      labelText: 'Block',
+                      labelText: 'Parmanent Address',
                       border: OutlineInputBorder()
                     ),
                     validator: (value) {
@@ -926,14 +978,14 @@ SizedBox(height: 16),
                   SizedBox(height: 16),
                   _buildTextField(
                     controller: _addressController,
-                    labelText: "Address",
+                    labelText: "Current Address",
                     icon: Icons.place,
                   ),
                   SizedBox(height: 16),
                   TextFormField(
                     controller: _LocationController,
                     decoration: InputDecoration(
-                      labelText: "Location",
+                      labelText: "Current Location of Service / Clinic",
                       border: OutlineInputBorder(),
                       suffixIcon: InkWell(
                         onTap: () {
@@ -983,25 +1035,86 @@ SizedBox(height: 16),
                   _buildTextField(
                     controller: _preferred_job_locationController,
                     labelText:
-                        "Preffered Job Location",
+                        "Preffered Job Location Pincode",
                     icon: Icons.location_on,
                   ),
                   SizedBox(height: 16),
 
                   _buildTextField(
                     controller: _any_experienceController,
-                    labelText: "Any Experience",
+                    labelText: "How many years of experience",
                     icon: Icons.work,
                     keyboardType: TextInputType.number,
                     
                   ),
                   SizedBox(height: 16),
 
-                  _buildTextField(
-                    controller: _category_of_breedController,
-                    labelText: "Category of Breed",
-                    icon: Icons.pets,
+                  // _buildTextField(
+                  //   controller: _category_of_breedController,
+                  //   labelText: "Category of Breed",
+                  //   icon: Icons.pets,
+                  // ),
+
+                  Row(
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(width: 10),
+                          Icon(
+                            Icons.medication,
+                            color: Colors.orange,
+                          ),
+                          SizedBox(width: 10),
+                          Text(
+                            "Proffered Diagnosis",
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ],
+                      ),
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(right: 5),
+                        child: Container(
+                          height: 33,
+                          padding: EdgeInsets.only(
+                              left: 8, right: 2), // Apply padding here
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey, width: 1),
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: DropdownButton<String>(
+                            value: selectedDiagnosis,
+                            icon: Icon(Icons.arrow_drop_down),
+                            underline: SizedBox(),
+                            dropdownColor: Colors.purple.shade50,
+                            borderRadius: BorderRadius.circular(15),
+                            iconSize: 30,
+                            onChanged: (value) {
+                              setState(() {
+                                selectedDiagnosis = value!;
+                              });
+                            },
+                            items: [
+                              DropdownMenuItem(
+                                value: "Cattle",
+                                child: Text("Cattle")),
+                              DropdownMenuItem(
+                                value: "Dog",
+                                child: Text("Dog")),
+                              DropdownMenuItem(
+                                value: "Small Animal",
+                                child: Text("Small Animal")),
+                              DropdownMenuItem(
+                                value: "All",
+                                child: Text("All")),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
+
                   SizedBox(height: 16),
                   Row(
                     children: [
@@ -1014,7 +1127,7 @@ SizedBox(height: 16),
                           ),
                           SizedBox(width: 10),
                           Text(
-                            "Courses",
+                            "Course Details",
                             style: TextStyle(fontSize: 18),
                           ),
                         ],
@@ -1067,7 +1180,7 @@ SizedBox(height: 16),
                           ),
                           SizedBox(width: 10),
                           Text(
-                            "Have Bike",
+                            "You Have Bike?",
                             style: TextStyle(fontSize: 18),
                           ),
                         ],
@@ -1186,7 +1299,7 @@ SizedBox(height: 16),
                               widget.emailController.text.toString(),
                               _addressController.text.toString(),
                               _any_experienceController.text.toString(),
-                              _category_of_breedController.text.toString(),
+                              selectedDiagnosis,
                               _preferred_job_locationController.text.toString(),
                               selectedJobTypeOption,
                               selectedCoursesOption,
@@ -1320,10 +1433,10 @@ SizedBox(height: 16),
         children: [
           Icon(Icons.file_copy, color: Colors.orange),
           SizedBox(width: 5),
-          Text("Registration Certificate"),
+          Text("Upload VET Certificate"),
         ],
       ),
-      subtitle: _selectedFile != null ? Text(_selectedFile!.path) : null,
+      subtitle: _selectedFile != null ? Text("File Uploaded") : null,
       trailing: MaterialButton(onPressed: _pickFile,
       child: Text("Choose File"),
       color: Colors.orange,
@@ -1342,61 +1455,66 @@ SizedBox(height: 16),
   }
 
   Widget _buildFileUploadField2() {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
         children: [
           Icon(Icons.file_copy, color: Colors.orange),
           SizedBox(width: 5),
-          Text("Aadhar Card"),
+          Text("Upload Your Adhar Card / Pan Card", style: TextStyle(fontSize: 16),),
         ],
       ),
-      subtitle:
-          _selectedFileaadhar != null ? Text(_selectedFileaadhar!.path) : null,
-      trailing: MaterialButton(onPressed: _pickFileaadhar_card,
-      child: Text("Choose File"),
-      color: Colors.orange,
-      textColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14)
-      )
+      SizedBox(
+        height: 10,
       ),
-      // trailing: Container(
-      //   child: ElevatedButton(
-      //     onPressed: _pickFileaadhar_card,
-      //     child: Text("Choose File"),
-      //   ),
-      // ),
+      Row(
+        children: [
+          _selectedFileaadhar != null ? Text("File Uploaded") : SizedBox(),
+          MaterialButton(onPressed: _pickFileaadhar_card,
+          child: Text("Choose File"),
+          color: Colors.orange,
+          textColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14)
+          )
+          ),
+        ],
+      ),
+      ],
     );
   }
 
   Widget _buildFileUploadField3() {
-    return ListTile(
-      contentPadding: EdgeInsets.zero,
-      title: Row(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
         children: [
           Icon(Icons.file_copy, color: Colors.orange),
           SizedBox(width: 5),
-          Text("Passport Size Photo"),
+          Text("Upload Passport Size Photo / Clinic Photo", style: TextStyle(fontSize: 16),),
         ],
       ),
-      subtitle: _selectedFilepassport != null
-          ? Text(_selectedFilepassport!.path)
-          : null,
-      trailing: MaterialButton(onPressed: _pickFilepassport_size,
-      child: Text("Choose File"),
-      color: Colors.orange,
-      textColor: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(14)
-      )
+      SizedBox(
+        height: 10,
       ),
-      // trailing: Container(
-      //   child: ElevatedButton(
-      //     onPressed: _pickFilepassport_size,
-      //     child: Text("Choose File"),
-      //   ),
-      // ),
+      Row(
+        children: [
+          MaterialButton(onPressed: _pickFilepassport_size,
+          child: Text("Choose File"),
+          color: Colors.orange,
+          textColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(14)
+          )
+          ),
+          _selectedFilepassport != null
+          ? Text("File Uploaded")
+          : Container()
+        ],
+      ),
+      ],
     );
   }
 
@@ -1407,11 +1525,11 @@ SizedBox(height: 16),
         children: [
           Icon(Icons.file_copy, color: Colors.orange),
           SizedBox(width: 5),
-          Text("Signature"),
+          Text("Upload Your Signature"),
         ],
       ),
       subtitle:
-          _selectedFilesign != null ? Text(_selectedFilesign!.path) : null,
+          _selectedFilesign != null ? Text("File Uploaded") : null,
       trailing: MaterialButton(onPressed: _pickFilesignature,
       child: Text("Choose File"),
       color: Colors.orange,

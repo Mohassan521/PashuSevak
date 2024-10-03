@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 
 class PrescriptionAndReportForFarmer extends StatefulWidget {
-  const PrescriptionAndReportForFarmer({super.key});
+  final String sid;
+  const PrescriptionAndReportForFarmer({super.key, required this.sid});
 
   @override
   State<PrescriptionAndReportForFarmer> createState() =>

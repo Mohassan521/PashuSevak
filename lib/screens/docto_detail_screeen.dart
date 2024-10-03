@@ -7,25 +7,22 @@ import 'package:pashusevak/screens/cattleDetails.dart';
 import 'package:http/http.dart' as http;
 import 'package:pashusevak/services/apiServices.dart';
 
-
 class DoctorDetailsScreen extends StatefulWidget {
   final String sid;
   final Map<String, dynamic> doctorData;
 
-  const DoctorDetailsScreen({super.key, required this.doctorData, required this.sid});
+  const DoctorDetailsScreen(
+      {super.key, required this.doctorData, required this.sid});
 
   @override
   State<DoctorDetailsScreen> createState() => _DoctorDetailsScreenState();
 }
 
 class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
-
   DateTime? _selectedDate;
-
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -107,50 +104,49 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
               height: 50,
             ),
             FutureBuilder<HealthcareSchedule>(
-  future: NetworkApiServices().fetchHealthcareSchedule(
-    widget.doctorData['doctor_id'], 
-    widget.sid, 
-    DateTime.now()
-  ),
-  builder: (context, snapshot) {
-    if (snapshot.connectionState == ConnectionState.waiting) {
-      return Center(child: CircularProgressIndicator());
-    } else if (snapshot.hasError) {
-      return Center(child: Text('SID expired, login again'));
-    } else if (snapshot.hasData && snapshot.data != null) {
-      // Safely access the data
-      print(snapshot.data!.serviceUnit);
+              future: NetworkApiServices().fetchHealthcareSchedule(
+                  widget.doctorData['doctor_id'], widget.sid, DateTime.now()),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('SID expired, login again'));
+                } else if (snapshot.hasData && snapshot.data != null) {
+                  // Safely access the data
+                  print(snapshot.data!.serviceUnit);
 
-      List<String> timeSlots = snapshot.data!.availSlot
-          .map((slot) => slot.getFormattedTimeSlot())
-          .toList();
+                  List<String> timeSlots = snapshot.data!.availSlot
+                      .map((slot) => slot.getFormattedTimeSlot())
+                      .toList();
 
-      return MaterialButton(
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30)),
-        color: Colors.orange,
-        child: Text(
-          "Book Appointment",
-          style: TextStyle(color: Colors.white),
-        ),
-        onPressed: () {
-          Navigator.push(context, MaterialPageRoute(
-            builder: (context) {
-              return AppointmentPage(
-                doctor_id: widget.doctorData['doctor_id'], 
-                sid: widget.sid,
-                doctor_name: widget.doctorData['doctor_name'],
-                visit_fees: widget.doctorData['visit_fees'],
-              );
-            },
-          ));
-        },
-      );
-    } else {
-      return Center(child: Text('Something went wrong'));
-    }
-  },
-)
+                  return MaterialButton(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30)),
+                    color: Colors.orange,
+                    child: Text(
+                      "Book Appointment",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    onPressed: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) {
+                          return AppointmentPage(
+                            doctor_id: widget.doctorData['doctor_id'],
+                            sid: widget.sid,
+                            doctor_name: widget.doctorData['doctor_name'],
+                            visit_fees: widget.doctorData['visit_fees'],
+                            lat: widget.doctorData['latitude'],
+                            lon: widget.doctorData['longitude'],
+                          );
+                        },
+                      ));
+                    },
+                  );
+                } else {
+                  return Center(child: Text('Something went wrong'));
+                }
+              },
+            )
 
             // ListView.builder(
             //   itemCount: slots.length,

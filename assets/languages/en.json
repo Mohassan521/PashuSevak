@@ -44,6 +44,16 @@
     "history" : "Appointment History",
     "logout" : "Logout",
     "policy" : "Policy Terms",
-    "doctor" : "Doctor"
+    "doctor" : "Doctor",
+    "training_facility" : "Training Facility",
+    "emergency" : "Emergency Care",
+    "health_rep" : "Health Report",
+    "vet_labs" : "Vet Labs",
+    "buy_our_service" : "Buy Our Service",
+    "sell_your_service" : "Sell your Service",
+    "nearby_doc" : "Nearby Consultants",
+    "no_doctor" : "No doctor registered near your area",
+    "setting" : "Settings",
+    "current" : "Current Appointments"
   }
   

@@ -76,7 +76,7 @@ class NetworkApiServices {
       'Cookie': 'sid=$sid',
     });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       List<dynamic> body = jsonDecode(request.body)['message'];
       print("body get: $body");
 
@@ -84,26 +84,24 @@ class NetworkApiServices {
           body.map((dynamic item) => PeriodList.fromJson(item)).toList();
       print("med list data: $banners");
       return banners;
-    }
-    else{
+    } else {
       throw Exception("Failed to load medication data");
     }
   }
 
-  Future<void> uploadDocsFromDoctor (File? _selectedFile) async {
-    var apiUrl = "http://43.205.23.114/api/method/oymom.api.upload__single_file";
+  Future<void> uploadDocsFromDoctor(File? _selectedFile) async {
+    var apiUrl =
+        "http://43.205.23.114/api/method/oymom.api.upload__single_file";
 
-    var request =  http.MultipartRequest('POST', Uri.parse(apiUrl));
-    request.files.add(
-      await http.MultipartFile.fromPath('file', _selectedFile!.path)
-    );
+    var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
+    request.files
+        .add(await http.MultipartFile.fromPath('file', _selectedFile!.path));
 
     var response = await request.send();
 
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       Utils().toastMessage("Upload successful");
-    }
-    else{
+    } else {
       print("something went wrong");
     }
   }
@@ -116,7 +114,7 @@ class NetworkApiServices {
       'Cookie': 'sid=$sid',
     });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       List<dynamic> body = jsonDecode(request.body)['message'];
       print("body get: $body");
 
@@ -124,13 +122,12 @@ class NetworkApiServices {
           body.map((dynamic item) => DiagnosisModel.fromJson(item)).toList();
       print("med list data: $banners");
       return banners;
-    }
-    else{
+    } else {
       throw Exception("Failed to load medication data");
     }
   }
 
-  Future<List<SymptomsModel>> getSymptoms (String sid) async {
+  Future<List<SymptomsModel>> getSymptoms(String sid) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.symptoms_name";
 
     var request = await http.get(Uri.parse(apiUrl), headers: {
@@ -138,7 +135,7 @@ class NetworkApiServices {
       'Cookie': 'sid=$sid',
     });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       List<dynamic> body = jsonDecode(request.body)['message'];
       print("body get: $body");
 
@@ -146,13 +143,12 @@ class NetworkApiServices {
           body.map((dynamic item) => SymptomsModel.fromJson(item)).toList();
       print("med list data: $banners");
       return banners;
-    }
-    else{
+    } else {
       throw Exception("Failed to load medication data");
     }
   }
 
-  Future<List<DosageFormModel>> getDosageForm (String sid) async {
+  Future<List<DosageFormModel>> getDosageForm(String sid) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.get_dosage_form";
 
     var request = await http.get(Uri.parse(apiUrl), headers: {
@@ -160,7 +156,7 @@ class NetworkApiServices {
       'Cookie': 'sid=$sid',
     });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       List<dynamic> body = jsonDecode(request.body)['message'];
       print("body get: $body");
 
@@ -168,8 +164,7 @@ class NetworkApiServices {
           body.map((dynamic item) => DosageFormModel.fromJson(item)).toList();
       print("med list data: $banners");
       return banners;
-    }
-    else{
+    } else {
       throw Exception("Failed to load medication data");
     }
   }
@@ -182,7 +177,7 @@ class NetworkApiServices {
       'Cookie': 'sid=$sid',
     });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       List<dynamic> body = jsonDecode(request.body)['message'];
       print("body get: $body");
 
@@ -190,8 +185,7 @@ class NetworkApiServices {
           body.map((dynamic item) => DosageList.fromJson(item)).toList();
       print("med list data: $banners");
       return banners;
-    }
-    else{
+    } else {
       throw Exception("Failed to load medication data");
     }
   }
@@ -204,7 +198,7 @@ class NetworkApiServices {
       'Cookie': 'sid=$sid',
     });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       List<dynamic> body = jsonDecode(request.body)['message'];
       print("body get: $body");
 
@@ -212,8 +206,7 @@ class NetworkApiServices {
           body.map((dynamic item) => MedicationList.fromJson(item)).toList();
       print("med list data: $banners");
       return banners;
-    }
-    else{
+    } else {
       throw Exception("Failed to load medication data");
     }
   }
@@ -230,7 +223,7 @@ class NetworkApiServices {
 
   //   if(request.statusCode == 200){
   //     final userData = jsonDecode(request.body);
-      
+
   //     final LoggedUserData = DoctorLoggedModel.fromJson(userData['message']);
   //     print("userData: $LoggedUserData");
   //     return LoggedUserData;
@@ -241,120 +234,126 @@ class NetworkApiServices {
   // }
 
   Future<LoggedUserModel> getUserDetails(String sid) async {
-    var apiUrl = "http://43.205.23.114/api/method/oymom.api.get_logged_user_details";
+    var apiUrl =
+        "http://43.205.23.114/api/method/oymom.api.get_logged_user_details";
 
-    var request = await http.get(Uri.parse(apiUrl),
-    headers: {
+    var request = await http.get(Uri.parse(apiUrl), headers: {
       'Content-Type': 'application/json',
       'Cookie': 'sid=$sid',
-    }
-    );
+    });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       final userData = jsonDecode(request.body);
-      
+
       final LoggedUserData = LoggedUserModel.fromJson(userData['message']);
       print("userData: $LoggedUserData");
       return LoggedUserData;
-    }
-    else{
+    } else {
       throw Exception("Failed To Load Data");
     }
   }
 
-
-  Future<HealthcareSchedule> fetchHealthcareSchedule(String doctorId, String sid, DateTime date) async {
-  final response = await http.get(
-    Uri.parse('http://43.205.23.114/api/method/oymom.api.get_availability_data?doctor=$doctorId&date=$date'),
-    headers: {
-      'Content-Type': 'application/json',
-      'Cookie': 'sid=$sid',
-    },
-  );
-
-  if (response.statusCode == 200) {
-    try {
-      final decodedJson = jsonDecode(response.body);
-
-      print('JSON Response: $decodedJson');
-
-      if (decodedJson['message'] != null && decodedJson['message']['slot_details'] != null) {
-        return HealthcareSchedule.fromJson(decodedJson['message']['slot_details'][0]);
-      } else {
-        throw Exception('Unexpected JSON structure');
-      }
-    } catch (e) {
-      // Log the error if JSON parsing fails
-      print('Error parsing JSON: $e');
-      throw Exception('Failed to parse healthcare schedule');
-    }
-  } else {
-    // Log the status code and reason if the request fails
-    print('Failed to load schedule. Status code: ${response.statusCode}, Reason: ${response.reasonPhrase}');
-    throw Exception('Failed to load healthcare schedule');
-  }
-}
-
-  Future<void> createAppointment (String doctor, String date, String farmerEmail, String serviceUnit, String appointmentTime, String sid) async {
-    var apiUrl = Uri.parse("http://43.205.23.114/api/method/oymom.api.make_appointment");
-
-    try{
-      final response = await http.post(apiUrl,
+  Future<HealthcareSchedule> fetchHealthcareSchedule(
+      String doctorId, String sid, DateTime date) async {
+    final response = await http.get(
+      Uri.parse(
+          'http://43.205.23.114/api/method/oymom.api.get_availability_data?doctor=$doctorId&date=$date'),
       headers: {
-      'Cookie': 'sid=$sid',
-    },
-      body: {
-        'doctor' : doctor,
-        'appointment_date' : date,
-        'farmer' : farmerEmail,
-        'service_unit' : serviceUnit,
-        'appointment_time' : appointmentTime
+        'Content-Type': 'application/json',
+        'Cookie': 'sid=$sid',
       },
+    );
+
+    if (response.statusCode == 200) {
+      try {
+        final decodedJson = jsonDecode(response.body);
+
+        print('JSON Response: $decodedJson');
+
+        if (decodedJson['message'] != null &&
+            decodedJson['message']['slot_details'] != null) {
+          return HealthcareSchedule.fromJson(
+              decodedJson['message']['slot_details'][0]);
+        } else {
+          throw Exception('Unexpected JSON structure');
+        }
+      } catch (e) {
+        // Log the error if JSON parsing fails
+        print('Error parsing JSON: $e');
+        throw Exception('Failed to parse healthcare schedule');
+      }
+    } else {
+      // Log the status code and reason if the request fails
+      print(
+          'Failed to load schedule. Status code: ${response.statusCode}, Reason: ${response.reasonPhrase}');
+      throw Exception('Failed to load healthcare schedule');
+    }
+  }
+
+  Future<void> createAppointment(String doctor, String date, String farmerEmail,
+      String serviceUnit, String appointmentTime, String sid) async {
+    var apiUrl =
+        Uri.parse("http://43.205.23.114/api/method/oymom.api.make_appointment");
+
+    try {
+      final response = await http.post(
+        apiUrl,
+        headers: {
+          'Cookie': 'sid=$sid',
+        },
+        body: {
+          'doctor': doctor,
+          'appointment_date': date,
+          'farmer': farmerEmail,
+          'service_unit': serviceUnit,
+          'appointment_time': appointmentTime
+        },
       );
 
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         print("Appointment created");
+      } else {
+        print(
+            "something went wrong ${response.statusCode}, Reason: ${response.reasonPhrase}");
       }
-      else{
-        print("something went wrong ${response.statusCode}, Reason: ${response.reasonPhrase}");
-      }
-    }
-    catch(e){
+    } catch (e) {
       print('Error: $e');
     }
   }
 
-  Future<List<Map<String, dynamic>>> nameOfAppointment (String sid) async {
+  Future<List<Map<String, dynamic>>> nameOfAppointment(String sid) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.appointment_list";
 
-    var request = await http.get(Uri.parse(apiUrl),
+    var request = await http.get(
+      Uri.parse(apiUrl),
       headers: {
-      'Content-Type': 'application/json',
-      'Cookie': 'sid=$sid',
-    },
+        'Content-Type': 'application/json',
+        'Cookie': 'sid=$sid',
+      },
     );
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       Map<String, dynamic> jsonResponse = json.decode(request.body);
-      List<Map<String, dynamic>> appointments = List<Map<String, dynamic>>.from(jsonResponse['message']);
+      List<Map<String, dynamic>> appointments =
+          List<Map<String, dynamic>>.from(jsonResponse['message']);
       return appointments;
-    }
-    else{
+    } else {
       throw Exception("Failed to load data");
     }
   }
 
-  Future<List<CattleListModel>> cattleListItems (String sid) async {
+  Future<List<CattleListModel>> cattleListItems(String sid) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.get_classified";
 
-    var request = await http.get(Uri.parse(apiUrl),
+    var request = await http.get(
+      Uri.parse(apiUrl),
       headers: {
-      'Content-Type': 'application/json',
-      'Cookie': 'sid=$sid',
-    },
+        'Content-Type': 'application/json',
+        'Cookie': 'sid=$sid',
+      },
     );
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       final responseBody = json.decode(request.body);
       final List<dynamic> appointmentsJson = responseBody['message'];
 
@@ -363,63 +362,156 @@ class NetworkApiServices {
       return appointmentsJson
           .map((json) => CattleListModel.fromJson(json))
           .toList();
-    }
-    else{
+    } else {
       throw Exception("Failed to load data");
     }
   }
 
-  Future<void> createEncounter (String sid, String appointment, String medication, String dosage, period, dosageForm, comment, String symptomsName, String? symptomsName2,String diagnosis_name, String? diagnosis_name2,  ) async {
+  Future<void> rejectAppointment(String sid, String appointmentName) async {
+    var apiUrl = "http://43.205.23.114/api/method/oymom.api.reject_appointment";
+
+    var request = await http.post(Uri.parse(apiUrl), headers: {
+      'Cookie': 'sid=$sid',
+    }, body: {
+      "appointment": appointmentName
+    });
+
+    if (request.statusCode == 200) {
+      Utils().toastMessage("Appointment Rejected Successfully");
+    } else {
+      print(
+          "Something went wrong ${request.statusCode} ${request.reasonPhrase}");
+    }
+  }
+
+  Future<void> createEncounter(
+    String sid,
+    String appointment,
+    String medication,
+    String dosage,
+    period,
+    dosageForm,
+    comment,
+    String symptomsName,
+    String? symptomsName2,
+    String diagnosis_name,
+    String? diagnosis_name2,
+  ) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.create_encounter";
 
-    var request = await http.post(Uri.parse(apiUrl),
-      headers: {
+    var request = await http.post(Uri.parse(apiUrl), headers: {
       'Cookie': 'sid=$sid',
-    },
-    body: {
+    }, body: {
       "appointment_name": appointment,
-      "medication" : medication,
-      "dosage" : dosage,
-      "period" : period,
-      "dosage_form" : dosageForm,
-      "comment" : comment,
-      "symptoms_name" : symptomsName,
-      "symptoms_name" : symptomsName2,
-      "diagnosis_name" : diagnosis_name,
-      "diagnosis_name" : diagnosis_name2,
-    }
-    );
+      "medication": medication,
+      "dosage": dosage,
+      "period": period,
+      "dosage_form": dosageForm,
+      "comment": comment,
+      "symptoms_name": symptomsName,
+      "symptoms_name": symptomsName2,
+      "diagnosis_name": diagnosis_name,
+      "diagnosis_name": diagnosis_name2,
+    });
 
-    if(request.statusCode == 200){
+    if (request.statusCode == 200) {
       print("Encounter Created successfully");
-    }
-    else {
-      print("Something went wrong ${request.statusCode} ${request.reasonPhrase}");
+    } else {
+      print(
+          "Something went wrong ${request.statusCode} ${request.reasonPhrase}");
     }
   }
 
-  Future<void> CattleListing (CattleListModel form) async {
+  Future<String?> uploadCattlePic (File file) async {
+    var url = Uri.parse("http://43.205.23.114/api/method/oymom.api.upload__single_file");
 
-    var url = Uri.parse("http://43.205.23.114/api/method/oymom.api.make_classified");
-    
-    try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({"forms": form.toJson()}),
-    );
+  var request = http.MultipartRequest("POST", url);
+
+  // Add file to the request
+  var multipartFile = await http.MultipartFile.fromPath(
+    'file', 
+    file.path,
+  );
+  request.files.add(multipartFile);
+
+  // Set headers if needed
+  request.headers.addAll({
+    'Accept': 'application/json',
+  });
+
+  try {
+    var response = await request.send();
+    var responseBody = await http.Response.fromStream(response);
 
     if (response.statusCode == 200) {
-      Utils().toastMessage("Cattle Registered");
+      var data = jsonDecode(responseBody.body);
+
+      // Extract 'file_url' from the response
+      String fileUrl = data['message']['file_url'];
+
+      print("File uploaded successfully, file_url: $fileUrl");
+      return fileUrl; // Return the file URL
     } else {
-      Utils().toastMessage("Something went wrong, try again");
+      print("Error uploading file: ${responseBody.body}");
+      return null;
     }
   } catch (e) {
-    print('Error: $e');
+    print("Exception occurred: $e");
+    return null;
   }
   }
+
+  Future<void> CattleListing(
+  String sellingProductCategory,
+  String typeOfCattle,
+  String cattleBreed,
+  String age,
+  String noOfHeat,
+  String isOnHeat,
+  String? heatPeriod,
+  String isOnPregnant,
+  String? pregnantPeriod,
+  String nowMilkPerDay,
+  String milkCapacityPerDay,
+  List<String> classifiedAttachments, // Changed to List<String>
+) async {
+
+  var uri = Uri.parse(
+    "http://43.205.23.114/api/method/oymom.api.make_classified");
+
+  var request = await http.post(
+    uri,
+    headers: {'Content-Type': 'application/json'},
+    body: jsonEncode({
+      "forms": {
+        "selling_product_category": sellingProductCategory.toString(),
+        "type_of_cattel": typeOfCattle.toString(),
+        "cattel_breed": cattleBreed.toString(),
+        "age": age.toString(),
+        "no_of_heat": noOfHeat.toString(),
+        "is_on_heat": isOnHeat.toString(),
+        "heat_period": heatPeriod ?? "".toString(),
+        "is_on_pregnant": isOnPregnant.toString(),
+        "pregnant_period": pregnantPeriod ?? "".toString(),
+        "now_milk_per_day": nowMilkPerDay.toString(),
+        "milk_capacity_per_day": milkCapacityPerDay.toString(),
+        "classifed_attachments": classifiedAttachments // Pass URLs directly
+      }
+    })
+  );
+
+  if (request.statusCode == 200) {
+    var jsonResponse = jsonDecode(request.body);
+    if (jsonResponse['message']['status'] == "failed") {
+      Utils().toastMessage(jsonResponse['message']['status']);
+      print(jsonResponse['message']);
+    } else if (jsonResponse['message']['status'] == "successful") {
+      Utils().toastMessage(jsonResponse['message']['status']);
+    }
+  } else {
+    print("Request failed with status: ${request.statusCode}");
+  }
+}
 
 //   Future<void> CattleListing(
 //   String sellingCategory,
@@ -604,5 +696,3 @@ class NetworkApiServices {
     }
   }
 }
-
-

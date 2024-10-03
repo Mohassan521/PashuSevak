@@ -74,22 +74,61 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Center(
-            child: Container(
-                height: 354,
-                width: 354,
-                decoration: BoxDecoration(
-                  color: Color(0xffFFC09A),
-                  borderRadius: BorderRadius.circular(170),
+      backgroundColor: Colors.white,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Center(child: Image.asset("assets/images/splashScreen.png", width: MediaQuery.sizeOf(context).width * 0.55,)),
+            
+                Text("Welcome To Pashusevak", textAlign: TextAlign.center ,style: TextStyle(fontSize: 26, fontWeight: FontWeight.bold, color: Colors.orange),),
+                
+                Text("#gaow_ka_Nayak", style: TextStyle(color: Colors.blue, fontWeight: FontWeight.w500, fontSize: 18),),
+                SizedBox(
+                  height: 20,
                 ),
-                child: Image.asset(
-                    height: 209, width: 209, "assets/images/splashScreen.png")),
-          )
-        ],
-      ),
+                Center(child: Image.asset("assets/images/logo2.png", height: MediaQuery.sizeOf(context).height * 0.16,)),
+                SizedBox(
+                  height: 70,
+                ),
+                Text("#Supported & Incubated By", style: TextStyle(fontSize: 14, fontWeight: FontWeight.w500, letterSpacing: 2),),
+                SizedBox(
+                  height: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Image.asset("assets/images/logo1.png", width: MediaQuery.sizeOf(context).width * 0.15,),
+                    SizedBox(
+                      width: 22,
+                    ),
+                    Image.asset("assets/images/logo4.png", width: MediaQuery.sizeOf(context).width * 0.18,),
+                    SizedBox(
+                      width: 22,
+                    ),
+                    Image.asset("assets/images/logo5.jpeg", width: MediaQuery.sizeOf(context).width * 0.15,),
+                  ],
+                ),
+                // SizedBox(
+                //   height: MediaQuery.sizeOf(context).height * 0.1,
+                // ),
+                
+              ],
+            ),
+            Column(
+              children: [
+                Text("#Copyright 2024", style: TextStyle(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold, letterSpacing: 3.5),),
+                Text("All Rights Reserved", style: TextStyle(fontSize: 13, color: Colors.blue, fontWeight: FontWeight.bold, letterSpacing: 3.5))
+              ],
+            )
+          ],
+        ),
+      )
     );
   }
 }

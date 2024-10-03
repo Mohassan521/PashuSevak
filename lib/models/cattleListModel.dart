@@ -1,4 +1,5 @@
 
+
 class CattleListModel {
   // final int? primaryKey;
   final String sellingProductCategory;
@@ -12,7 +13,7 @@ class CattleListModel {
   final String? pregnantPeriod;
   final double nowMilkPerDay;
   final double milkCapacityPerDay;
-  final List<String> classifiedAttachments;
+  final List<String>? classifiedAttachments;
 
   CattleListModel({
     // this.primaryKey,
@@ -62,7 +63,7 @@ class CattleListModel {
     milkCapacityPerDay: json['milk_capacity_per_day'],
     classifiedAttachments: json['classifed_attachments'] != null
         ? List<String>.from(json['classifed_attachments'].map((item) => item['pic_or_video'].toString()))
-        : [], // Assuming it's a List<String>
+        : [],
   );
 }
 

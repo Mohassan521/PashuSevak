@@ -11,8 +11,10 @@ class AppointmentPage extends StatefulWidget {
   final String sid;
   final String doctor_name;
   final double visit_fees;
+  final double lat;
+  final double lon;
   const AppointmentPage(
-      {super.key, required this.doctor_id, required this.sid, required this.doctor_name, required this.visit_fees});
+      {super.key, required this.doctor_id, required this.sid, required this.doctor_name, required this.visit_fees, required this.lat, required this.lon});
 
   @override
   State<AppointmentPage> createState() => _AppointmentPageState();
@@ -38,6 +40,7 @@ class _AppointmentPageState extends State<AppointmentPage> {
 
   @override
   Widget build(BuildContext context) {
+    print("latitude and longitude of these doctors: ${widget.lat} ${widget.lon}");
     return Scaffold(
       appBar: AppBar(
         title: Text("Dr. ${widget.doctor_name}appointment slots"),
@@ -97,6 +100,8 @@ class _AppointmentPageState extends State<AppointmentPage> {
                                 sid: widget.sid,
                                 doctorId: widget.doctor_id,
                                 selectedDate: Provider.of<DateProvider>(context).selectedDate ?? DateTime.now(),
+                                lat: widget.lat,
+                                lon: widget.lon,
                                 doctorName: widget.doctor_name, service_unit: snapshot.data!.serviceUnit, visitFees: widget.visit_fees , appt_time: "${snapshot.data!.availSlot[index].fromTime}", farmer_email: userDetails.name ?? "")));
 
 

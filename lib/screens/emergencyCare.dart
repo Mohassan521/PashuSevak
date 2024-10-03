@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'dart:ui' as ui;
@@ -17,7 +21,6 @@ class EmergencyCare extends StatefulWidget {
 class _EmergencyCareState extends State<EmergencyCare> {
   int selectedContainerIndex = 0;
 
-  static const LatLng _center = LatLng(17.3850, 78.4867); // Hyderabad, India
   static const double _radius = 16000; // 16 km in meters
 
   final Set<Marker> _markers = {};
@@ -25,6 +28,9 @@ class _EmergencyCareState extends State<EmergencyCare> {
   final List<Marker> _allMarkers = []; // To keep track of all markers
 
   Map<String, dynamic> markerDataMap = {};
+
+  LatLng? _currentLocation;
+  final Completer<GoogleMapController> _controller = Completer();
 
   final List<String> images = [
     'assets/images/docAvatar.png', // Doctor
@@ -50,9 +56,91 @@ class _EmergencyCareState extends State<EmergencyCare> {
   @override
   void initState() {
     super.initState();
-    _addCenterMarker();
-    _addCircle();
+    _checkLocationPermission();
     fetchMarkersFromAPI();
+  }
+
+  Future<void> _checkLocationPermission() async {
+    PermissionStatus permission = await Permission.location.status;
+
+    if (permission.isGranted) {
+      _getUserLocation();
+    } else if (permission.isDenied) {
+      await Permission.location.request();
+      if (await Permission.location.isGranted) {
+        _getUserLocation();
+      } else {
+        _showLocationServiceDisabledDialog();
+      }
+    } else {
+      _showLocationServiceDisabledDialog();
+    }
+  }
+
+  Future<void> _getUserLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      _showLocationServiceDisabledDialog();
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse &&
+          permission != LocationPermission.always) {
+        _showLocationServiceDisabledDialog();
+        return;
+      }
+    }
+
+    Position position = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      _currentLocation = LatLng(position.latitude, position.longitude);
+      _updateMapLocation();
+    });
+  }
+
+  void _updateMapLocation() async {
+    if (_currentLocation != null) {
+      final GoogleMapController controller = await _controller.future;
+      controller
+          .animateCamera(CameraUpdate.newLatLngZoom(_currentLocation!, 15));
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('user_location'),
+          position: _currentLocation!,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          infoWindow: const InfoWindow(title: 'Your Location'),
+        ),
+      );
+      setState(() {});
+    }
+  }
+
+  void _showLocationServiceDisabledDialog() {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Location Services Disabled'),
+          content: const Text(
+              'Please enable location services to use this feature.'),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   Future<void> fetchMarkersFromAPI() async {
@@ -115,31 +203,6 @@ class _EmergencyCareState extends State<EmergencyCare> {
     }
   }
 
-  void _addCenterMarker() {
-    _markers.add(
-      Marker(
-        markerId: const MarkerId('center_marker'),
-        position: _center,
-        infoWindow: const InfoWindow(title: 'Hyderabad Center'),
-        icon: BitmapDescriptor.defaultMarker,
-      ),
-    );
-  }
-
-  void _addCircle() {
-    _circles.add(
-      Circle(
-        circleId: const CircleId('radius_circle'),
-        center: _center,
-        radius: _radius,
-        fillColor: const Color.fromARGB(255, 255, 173, 167)
-            .withOpacity(0.2), // Light color for the radius
-        strokeColor: Colors.red,
-        strokeWidth: 1,
-      ),
-    );
-  }
-
   void _filterMarkers() {
     String selectedRole;
     switch (selectedContainerIndex) {
@@ -167,8 +230,17 @@ class _EmergencyCareState extends State<EmergencyCare> {
       ),
     );
 
-    // Re-add the center marker
-    _addCenterMarker();
+    // Re-add the user's location marker
+    if (_currentLocation != null) {
+      _markers.add(
+        Marker(
+          markerId: const MarkerId('user_location'),
+          position: _currentLocation!,
+          icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+          infoWindow: const InfoWindow(title: 'Your Location'),
+        ),
+      );
+    }
 
     setState(() {});
   }
@@ -179,7 +251,10 @@ class _EmergencyCareState extends State<EmergencyCare> {
       Navigator.push(
         context,
         MaterialPageRoute(
-          builder: (context) => DoctorDetailsScreen(doctorData: doctorData, sid: widget.sid,),
+          builder: (context) => DoctorDetailsScreen(
+            doctorData: doctorData,
+            sid: widget.sid,
+          ),
         ),
       );
     } else {
@@ -197,10 +272,15 @@ class _EmergencyCareState extends State<EmergencyCare> {
         children: [
           Expanded(
             child: GoogleMap(
-              onMapCreated:
-                  (controller) {}, // Leave this empty if not using mapController
+              onMapCreated: (controller) {
+                _controller.complete(controller);
+                if (_currentLocation != null) {
+                  controller.animateCamera(
+                      CameraUpdate.newLatLngZoom(_currentLocation!, 15));
+                }
+              },
               initialCameraPosition: const CameraPosition(
-                target: _center,
+                target: LatLng(0, 0), // Use a default position initially
                 zoom: 11.0,
               ),
               markers: _markers,

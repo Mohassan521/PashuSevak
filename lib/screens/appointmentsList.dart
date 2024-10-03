@@ -92,8 +92,9 @@ class _AppointmentListState extends State<AppointmentList> {
                                   Text(
                                     "Status: ${appointments[index].status}",
                                     style: TextStyle(
+                                      fontWeight: FontWeight.w700,
                                       color:
-                                          snapshot.data![index].status == "Open"
+                                          snapshot.data![index].status == "Open" || snapshot.data![index].status == "Scheduled"
                                               ? Colors.green
                                               : Colors.red,
                                     ),

@@ -12,22 +12,11 @@ class WalletScreen extends StatelessWidget {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.white),
         backgroundColor: Colors.orange,
-        title: Text(
-          Localization.of(context)!
-                      .translate('greeting')!,
+        title: Text("Wallet",
           style: TextStyle(
             color: Colors.white,
           ),
         ),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 8.0),
-            child: CircleAvatar(
-              maxRadius: 19,
-              backgroundColor: Colors.grey,
-            ),
-          ),
-        ],
       ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

@@ -6,8 +6,8 @@ class GetBreedOfCattle {
 
   factory GetBreedOfCattle.fromJson(Map<String, dynamic> json) {
     return GetBreedOfCattle(
-      value: json['value'],
-      label: json['label'],
+      value: json['value'] as String,
+      label: json['label'] as String,
     );
   }
 }

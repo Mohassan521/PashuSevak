@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pashusevak/models/cattleListModel.dart';
 import 'package:pashusevak/models/getBreedOfCattle.dart';
 import 'package:pashusevak/services/apiServices.dart';
@@ -18,47 +19,76 @@ class CattleListingForm extends StatefulWidget {
 
 class _CattleListingFormState extends State<CattleListingForm> {
   Future<List<GetBreedOfCattle>> getBreedOfCattle() async {
-    String url =
-        "http://43.205.23.114/api/method/oymom.api.get_breed_of_cattle";
+  String url = "http://43.205.23.114/api/method/oymom.api.get_breed_of_cattle";
 
-    var request = await http.get(Uri.parse(url), headers: {
-      'Content-Type': 'application/json',
-      'Cookie': 'sid=${widget.sid}',
-    });
+  var request = await http.get(Uri.parse(url), headers: {
+    'Cookie': 'sid=${widget.sid}',
+  });
 
-    if (request.statusCode == 200) {
-      List<dynamic> body = jsonDecode(request.body)['message'];
-      List<GetBreedOfCattle> breeds =
-          body.map((dynamic item) => GetBreedOfCattle.fromJson(item)).toList();
-      return breeds;
+  if (request.statusCode == 200) {
+    List<dynamic> body = jsonDecode(request.body)['message'];
+    return body.map((dynamic item) => GetBreedOfCattle.fromJson(item)).toList();
+  } else {
+    throw Exception('Failed to load cattle breeds. Status code: ${request.statusCode}');
+  }
+}
+
+  File? _image;
+  final _picker = ImagePicker();
+
+  List<File> _selectedFiles = [];
+
+  Future getImage() async {
+    final pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery);
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      _selectedFiles.clear();
+      _selectedFiles.add(_image!);
+      setState(() {});
     } else {
-      throw Exception('Failed to load cattle breeds');
+      print('no image selected');
     }
   }
 
-  List<String> _selectedFiles = [];
+  Future<void> onSubmit() async {
+  // Ensure there are images selected
+  if (_selectedFiles.isEmpty) {
+    print('No images selected');
+    return;
+  }
 
-  Future<void> _pickFiles() async {
-    // Use FilePicker to select multiple files
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png'],
-      allowMultiple: true
-    );
-
-    if (result != null) {
-      _selectedFiles.addAll(result.paths.where((path) => path != null).cast<String>());
-      setState(() {
-         
-      });
-     
-      
+  // Step 1: Upload the images and collect URLs
+  List<String> uploadedUrls = [];
+  for (var file in _selectedFiles) {
+    String? fileUrl = await NetworkApiServices().uploadCattlePic(file);  // Assume this returns the URL after upload
+    if (fileUrl != null) {
+      uploadedUrls.add(fileUrl);
     } else {
-      // User canceled the picker
-      print('File selection canceled.');
+      print('Image upload failed');
+      return; // Exit if any image upload fails
     }
   }
 
+  // Step 2: After successful uploads, call the CattleListing function
+  await NetworkApiServices().CattleListing(
+    productCategory,
+    cattleType!,
+    cattleBreed.text.toString(),
+    age.text.toString(),
+    "0",
+    isOnHeat,
+    heatPeriod,
+    isOnPregnant,
+    pregantPeriod,
+    milkPerDay.text.toString(),
+    milkCapacityPerDay.text.toString(),
+    uploadedUrls,  // Pass the URLs instead of files
+  );
+}
+
+  
   String productCategory = "";
   String? cattleType;
   TextEditingController cattleBreed = TextEditingController();
@@ -70,8 +100,11 @@ class _CattleListingFormState extends State<CattleListingForm> {
   TextEditingController milkPerDay = TextEditingController();
   TextEditingController milkCapacityPerDay = TextEditingController();
 
+
   @override
   Widget build(BuildContext context) {
+    
+
     return Scaffold(
       appBar: AppBar(
         title: Text("List Your Cattle"),
@@ -149,52 +182,52 @@ class _CattleListingFormState extends State<CattleListingForm> {
                 height: 5,
               ),
               FutureBuilder(
-                future: getBreedOfCattle(),
-                builder: (context, snapshot) {
-                  if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                    return Center(child: Text('No breeds available'));
-                  } else if (snapshot.hasData) {
-                    List<GetBreedOfCattle> breeds = snapshot.data!;
+  future: getBreedOfCattle(),
+  builder: (context, snapshot) {
+    if (snapshot.hasError) {
+      return Center(child: Text('Error: ${snapshot.error}'));
+    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+      return Center(child: Text('No breeds available'));
+    } else {
+      List<GetBreedOfCattle> breeds = snapshot.data!;
+      print(snapshot.data);
 
-                    return Container(
-                        height: MediaQuery.of(context).size.height * 0.055,
-                        padding: EdgeInsets.only(left: 9),
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5.5),
-                          color: Colors.white,
-                          border: Border.all(
-                            color: Colors.black,
-                            width: 1,
-                          ),
-                        ),
-                        child: DropdownButton<String>(
-                          alignment: Alignment.center,
-                          isExpanded: true,
-                          value: cattleType,
-                          onChanged: (String? newValue) {
-                            setState(() {
-                              cattleType = newValue;
-                            });
-                          },
-                          items: breeds.map((breed) {
-                            return DropdownMenuItem<String>(
-                              value: breed.label,
-                              child: Center(
-                                child: Text(
-                                  breed.label,
-                                  style: TextStyle(fontSize: 12),
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                        ));
-                  } else {
-                    return Center(child: Text('No appointments available'));
-                  }
-                },
+      return Container(
+        height: MediaQuery.of(context).size.height * 0.055,
+        padding: EdgeInsets.only(left: 9),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(5.5),
+          color: Colors.white,
+          border: Border.all(
+            color: Colors.black,
+            width: 1,
+          ),
+        ),
+        child: DropdownButton<String>(
+          alignment: Alignment.center,
+          isExpanded: true,
+          value: cattleType,
+          onChanged: (String? newValue) {
+            setState(() {
+              cattleType = newValue;
+            });
+          },
+          items: breeds.map((breed) {
+            return DropdownMenuItem<String>(
+              value: breed.value,
+              child: Center(
+                child: Text(
+                  breed.label,
+                  style: TextStyle(fontSize: 12),
+                ),
               ),
+            );
+          }).toList(),
+        ),
+      );
+    }
+  },
+),
               SizedBox(
                 height: 10,
               ),
@@ -622,7 +655,9 @@ class _CattleListingFormState extends State<CattleListingForm> {
                       'Browse',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: _pickFiles,
+                    onPressed: (){
+                      getImage();
+                    },
                   ),
                   SizedBox(
                     height: 15,
@@ -646,25 +681,28 @@ class _CattleListingFormState extends State<CattleListingForm> {
               ),
               MaterialButton(
                 onPressed: () {
-                  final form = CattleListModel(
-                    sellingProductCategory: productCategory,
-                    typeOfCattle: cattleType!,
-                    cattleBreed: cattleBreed.text,
-                    age: double.tryParse(age.text) ?? 0.0,
-                    noOfHeat: 0,
-                    isOnHeat: isOnHeat,
-                    heatPeriod: heatPeriod,
-                    isOnPregnant: isOnPregnant,
-                    pregnantPeriod: pregantPeriod,
-                    nowMilkPerDay: double.tryParse(milkPerDay.text) ?? 0.0,
-                    milkCapacityPerDay:
-                        double.tryParse(milkCapacityPerDay.text) ?? 0.0,
-                    classifiedAttachments: _selectedFiles,
-                  );
+                  // final form = CattleListModel(
+                    // sellingProductCategory: productCategory,
+                    // typeOfCattle: cattleType!,
+                    // cattleBreed: cattleBreed.text,
+                    // age: double.tryParse(age.text) ?? 0.0,
+                    // noOfHeat: 0,
+                    // isOnHeat: isOnHeat,
+                    // heatPeriod: heatPeriod,
+                    // isOnPregnant: isOnPregnant,
+                    // pregnantPeriod: pregantPeriod,
+                    // nowMilkPerDay: double.tryParse(milkPerDay.text) ?? 0.0,
+                    // milkCapacityPerDay:
+                    //     double.tryParse(milkCapacityPerDay.text) ?? 0.0,
+                    // classifiedAttachments: _selectedFiles,
+                  // );
 
-                  NetworkApiServices().CattleListing(
-                      form                   
-                      );
+                  print("After submitting form, here are values: $productCategory, $cattleType, ${cattleBreed.text}, ${double.parse(age.text)},$isOnHeat, $heatPeriod, $isOnPregnant, $pregantPeriod, ${double.parse(milkPerDay.text)},${double.tryParse(milkCapacityPerDay.text) ?? 0.0}, $_selectedFiles");
+
+                  if(productCategory.isEmpty || cattleType == "" || cattleType!.isEmpty || cattleBreed.text.isEmpty || age.text.isEmpty || milkPerDay.text.isEmpty || milkCapacityPerDay.text.isEmpty){
+                    return;
+                  }
+                  onSubmit();
                 },
                 child: Center(child: Text("Submit")),
                 minWidth: double.infinity,

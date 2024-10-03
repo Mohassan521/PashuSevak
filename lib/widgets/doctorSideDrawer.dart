@@ -27,429 +27,434 @@ class DoctorSideDrawer extends StatelessWidget {
         child: Padding(
           padding: const EdgeInsets.symmetric(
             horizontal: 25.0,
-            vertical: 38,
+            vertical: 25,
           ),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.vertical,
-            child: Column(
-              children: [
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      maxRadius: 45,
-                      backgroundColor: Colors.grey,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                children: [
+                  Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        maxRadius: 45,
+                        backgroundColor: Colors.grey,
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        Localization.of(context)!.translate('doctor')!,
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 20,
+                        ),
+                      ),
+                      // MaterialButton(
+                      //   shape: RoundedRectangleBorder(
+                      //     borderRadius: BorderRadius.circular(20),
+                      //   ),
+                      //   padding: EdgeInsets.all(12.5),
+                      //   onPressed: () {},
+                      //   color: Color(0xfffe924a),
+                      //   child: Center(
+                      //     child: Text(
+                      //       "Profile & Settings",
+                      //       style: TextStyle(
+                      //         color: Colors.white,
+                      //         fontWeight: FontWeight.w700,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 28,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(sid: sid)));
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Icon(
+                          Icons.person,
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          Localization.of(context)!.translate('profile')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
                     ),
-                    SizedBox(
-                      height: 12,
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionForDoctors()));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.subscriptions,
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          Localization.of(context)!.translate('subscription')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
                     ),
-                    Text(
-                      Localization.of(context)!.translate('doctor')!,
-                      style: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20,
-                      ),
+                  ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WalletScreen(
+                                      sid: sid,
+                                    )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.wallet,
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          Localization.of(context)!.translate('wallet')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
                     ),
-                    // MaterialButton(
-                    //   shape: RoundedRectangleBorder(
-                    //     borderRadius: BorderRadius.circular(20),
-                    //   ),
-                    //   padding: EdgeInsets.all(12.5),
-                    //   onPressed: () {},
-                    //   color: Color(0xfffe924a),
-                    //   child: Center(
-                    //     child: Text(
-                    //       "Profile & Settings",
-                    //       style: TextStyle(
-                    //         color: Colors.white,
-                    //         fontWeight: FontWeight.w700,
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
-                  ],
-                ),
-                SizedBox(
-                  height: 28,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => ProfileScreen(sid: sid)));
-                  },
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Icon(
-                        Icons.person,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('profile')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => SubscriptionForDoctors()));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.subscriptions,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('subscription')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )
-                    ],
+                  SizedBox(
+                    height: 20,
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => WalletScreen(
-                                    sid: sid,
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.wallet,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('wallet')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => PharmacyForDoctors(
+                                      
+                                    )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.inventory,
+                          color: Colors.black,
+                          size: 24,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PharmacyForDoctors(
-                                    
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.inventory,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('inventory')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 10,
                         ),
-                      )
-                    ],
+                        Text(
+                          Localization.of(context)!.translate('inventory')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => EBookForDoctors(
-                                   
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.book,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('book')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EBookForDoctors(
+                                     
+                                    )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.book,
+                          color: Colors.black,
+                          size: 24,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    // Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => WalletScreen(
-                    //                 sid: sid,
-                    //               )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.share,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('share')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 10,
                         ),
-                      )
-                    ],
+                        Text(
+                          Localization.of(context)!.translate('book')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatForDoctors(
-                                    
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.chat,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('chat')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      // Navigator.push(
+                      //       context,
+                      //       MaterialPageRoute(
+                      //           builder: (context) => WalletScreen(
+                      //                 sid: sid,
+                      //               )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.share,
+                          color: Colors.black,
+                          size: 24,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    // Navigator.push(
-                    //       context,
-                    //       MaterialPageRoute(
-                    //           builder: (context) => WalletScreen(
-                    //                 sid: sid,
-                    //               )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.location_searching,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('location-control')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 10,
                         ),
-                      )
-                    ],
+                        Text(
+                          Localization.of(context)!.translate('share')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => SalesForDoctors(
-                                   
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.shop_two,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('sales')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatForDoctors(
+                                      
+                                    )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.chat,
+                          color: Colors.black,
+                          size: 24,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => AppointmentHistoryForDoctors(
-                                   
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.history,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('history')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 10,
                         ),
-                      )
-                    ],
+                        Text(
+                          Localization.of(context)!.translate('chat')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    NetworkApiServices().logout();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => FrontPage()));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.logout,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('logout')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     // Navigator.push(
+                  //     //       context,
+                  //     //       MaterialPageRoute(
+                  //     //           builder: (context) => WalletScreen(
+                  //     //                 sid: sid,
+                  //     //               )));
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       Icon(
+                  //         Icons.location_searching,
+                  //         color: Colors.black,
+                  //         size: 24,
+                  //       ),
+                  //       SizedBox(
+                  //         width: 10,
+                  //       ),
+                  //       Text(
+                  //         Localization.of(context)!.translate('location-control')!,
+                  //         style: TextStyle(
+                  //           fontSize: 17.5,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                  // SizedBox(
+                  //   height: 20,
+                  // ),
+                  // InkWell(
+                  //   onTap: () {
+                  //     Navigator.push(
+                  //           context,
+                  //           MaterialPageRoute(
+                  //               builder: (context) => SalesForDoctors(
+                                     
+                  //                   )));
+                  //   },
+                  //   child: Row(
+                  //     children: [
+                  //       Icon(
+                  //         Icons.shop_two,
+                  //         color: Colors.black,
+                  //         size: 24,
+                  //       ),
+                  //       SizedBox(
+                  //         width: 10,
+                  //       ),
+                  //       Text(
+                  //         Localization.of(context)!.translate('sales')!,
+                  //         style: TextStyle(
+                  //           fontSize: 17.5,
+                  //           fontWeight: FontWeight.bold,
+                  //         ),
+                  //       )
+                  //     ],
+                  //   ),
+                  // ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => AppointmentHistoryForDoctors(
+                                     
+                                    )));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.history,
+                          color: Colors.black,
+                          size: 24,
                         ),
-                      )
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                Divider(
-                  thickness: 1.5,
-                  height: 5,
-                ),
-                SizedBox(
-                  height: 20,
-                ),
-                InkWell(
-                  onTap: () {
-                    Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => PolicyForDoctors(
-                                   
-                                  )));
-                  },
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.call,
-                        color: Colors.black,
-                        size: 24,
-                      ),
-                      SizedBox(
-                        width: 10,
-                      ),
-                      Text(
-                        Localization.of(context)!.translate('policy')!,
-                        style: TextStyle(
-                          fontSize: 17.5,
-                          fontWeight: FontWeight.bold,
+                        SizedBox(
+                          width: 10,
                         ),
-                      )
-                    ],
+                        Text(
+                          Localization.of(context)!.translate('history')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
+                  SizedBox(
+                    height: 20,
+                  ),
+                  InkWell(
+                    onTap: () {
+                      NetworkApiServices().logout();
+                      Navigator.pushReplacement(context,
+                          MaterialPageRoute(builder: (context) => FrontPage()));
+                    },
+                    child: Row(
+                      children: [
+                        Icon(
+                          Icons.logout,
+                          color: Colors.black,
+                          size: 24,
+                        ),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Text(
+                          Localization.of(context)!.translate('logout')!,
+                          style: TextStyle(
+                            fontSize: 17.5,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        )
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+                              Column(
+                          children: [
+                            Text(
+                              "Made For Pashuseva",
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.bold // Increase font size
+                              ),
+                              textAlign:
+                                  TextAlign.center, // Center-align the text
+                            ),
+                            SizedBox(
+                              height: 5,
+                            ),
+                              
+                Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            RichText(
+                              text: TextSpan(
+                                text: "🇮🇳 ",
+                                style: TextStyle(fontSize: 18),
+                              ),
+                            ),
+                            Text(
+                              " Crafted In Bihar, India",
+                              style: TextStyle(
+                                fontSize: 16, // Slightly smaller font size
+                                fontWeight: FontWeight.w600, // Semi-bold text
+                                color: Colors.orange, // Set a custom color
+                                fontStyle:
+                                    FontStyle.italic, // Italicize the text
+                              ),
+                              textAlign:
+                                  TextAlign.center, // Center-align the text
+                            ),
+                          ],
+                        ),
+                        
+                          ],
+                        ),
+          
+            ],
           ),
         ),
       ),

@@ -12,6 +12,8 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   TextEditingController MobilenumberController = TextEditingController();
 
+  String extractedOTP = "";
+
   Future<void> generateLoginOTP() async {
     final apiUrl =
         'http://43.205.23.114/api/method/oymom.api.get_login_otp?mobile_no=${MobilenumberController.text}';
@@ -25,7 +27,7 @@ class _LoginPageState extends State<LoginPage> {
 
         // Check if 'message' key is present and not null
         if (data != null && data['message'] != null) {
-          String generatedOTP = extractOTPFromMessage(data['message']);
+          extractedOTP = extractOTPFromMessage(data['message']);
 
           // Pass mobile number and generated OTP to LoginOtpVerificationPage
           Navigator.push(
@@ -34,7 +36,7 @@ class _LoginPageState extends State<LoginPage> {
               builder: (context) {
                 return LoginOtpVerificationPage(
                   mobileNumber: MobilenumberController.text,
-                  generatedOTP: generatedOTP,
+                  generatedOTP: extractedOTP,
                 );
               },
             ),
@@ -90,14 +92,12 @@ class _LoginPageState extends State<LoginPage> {
             children: [
               SizedBox(height: 20),
               Text(
-                Localization.of(context)!
-                      .translate('signin')!,
+                Localization.of(context)!.translate('signin')!,
                 style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
               // SizedBox(height: 10),
               Text(
-                Localization.of(context)!
-                      .translate('message')!,
+                Localization.of(context)!.translate('message')!,
                 style: TextStyle(fontSize: 16),
               ),
               SizedBox(height: 20),
@@ -121,13 +121,14 @@ class _LoginPageState extends State<LoginPage> {
             ],
           ),
           MaterialButton(
-            onPressed: () {
+            onPressed: () async {
               print("mobile number entered: ${MobilenumberController.text}");
+
               generateLoginOTP();
+              print("class scope variable: $extractedOTP");
             },
             child: Text(
-              Localization.of(context)!
-                      .translate('login')! ,
+              Localization.of(context)!.translate('login')!,
               style: TextStyle(
                 fontWeight: FontWeight.w500,
                 fontSize: 18,
