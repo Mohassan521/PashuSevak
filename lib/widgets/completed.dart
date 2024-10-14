@@ -4,13 +4,13 @@ import 'package:pashusevak/screens/traceAppointment.dart';
 
 class CompletedAnyTask extends StatelessWidget {
   final String message;
-  final String sid;
+  final String? sid;
   final double? lat;
   final double? lon;
   const CompletedAnyTask(
       {super.key,
       required this.message,
-      required this.sid,
+       this.sid,
       this.lat,
       this.lon});
 

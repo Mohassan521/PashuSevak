@@ -19,6 +19,7 @@ import 'package:pashusevak/models/loggedUserModel.dart';
 import 'package:pashusevak/models/medicationList.dart';
 import 'package:pashusevak/models/periodList.dart';
 import 'package:pashusevak/models/symptomsModel.dart';
+import 'package:pashusevak/widgets/completed.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class NetworkApiServices {
@@ -503,7 +504,8 @@ class NetworkApiServices {
   if (request.statusCode == 200) {
     var jsonResponse = jsonDecode(request.body);
     if (jsonResponse['message']['status'] == "failed") {
-      Utils().toastMessage(jsonResponse['message']['status']);
+      // Utils().toastMessage(jsonResponse['message']['status']);
+      CompletedAnyTask(message: "Cattle Listing Updated",);
       print(jsonResponse['message']);
     } else if (jsonResponse['message']['status'] == "successful") {
       Utils().toastMessage(jsonResponse['message']['status']);
@@ -513,125 +515,6 @@ class NetworkApiServices {
   }
 }
 
-//   Future<void> CattleListing(
-//   String sellingCategory,
-//   String typeOfCattle,
-//   String cattleBreed,
-//   double age,
-//   String isOnHeat,
-//   String? heatPeriod,
-//   String isOnPregnant,
-//   String? pregnantPeriod,
-//   double milkPerDay,
-//   double milkCapacity,
-//   List<String> fileToUpload,
-// ) async {
-//   final apiUrl = "http://43.205.23.114/api/method/oymom.api.make_classified";
-
-//   var request = http.MultipartRequest('POST', Uri.parse(apiUrl));
-
-//   // Adding files to the request
-//   if (fileToUpload != null && fileToUpload.isNotEmpty) {
-//     for (int i = 0; i < fileToUpload.length; i++) {
-//       File imageFile = fileToUpload[i];
-//       var stream = http.ByteStream(imageFile.openRead());
-//       var length = await imageFile.length();
-//       var multipartFile = http.MultipartFile(
-//         "classifed_attachments[$i]",
-//         stream,
-//         length,
-//         filename: imageFile.path.split("/").last,
-//       );
-//       request.files.add(multipartFile);
-//       print('Added file: ${imageFile.path}');
-//     }
-//   }
-
-//   // Creating the JSON data for 'forms'
-//   // Map<String, dynamic> formsData = {
-//   //   "selling_product_category": sellingCategory,
-//   //   "type_of_cattel": typeOfCattle,
-//   //   "cattel_breed": cattleBreed,
-//   //   "age": age,
-//   //   "is_on_heat": isOnHeat,
-//   //   "heat_period": heatPeriod ?? "",
-//   //   "is_on_pregnant": isOnPregnant,
-//   //   "pregnant_period": pregnantPeriod ?? "",
-//   //   "now_milk_per_day": milkPerDay,
-//   //   "milk_capacity_per_day": milkCapacity,
-//   // };
-
-//   var formsData = {
-//     "selling_product_category": sellingCategory,
-//     "type_of_cattel": typeOfCattle,
-//     "cattel_breed": cattleBreed,
-//     "age": age,
-//     "is_on_heat": isOnHeat,
-//     "heat_period": heatPeriod ?? "",
-//     "is_on_pregnant": isOnPregnant,
-//     "pregnant_period": pregnantPeriod ?? "",
-//     "now_milk_per_day": milkPerDay,
-//     "milk_capacity_per_day": milkCapacity,
-//   };
-
-//   request.fields['forms'] = jsonEncode(formsData);
-//   if (kDebugMode) {
-//     print('Sending forms data: ${jsonEncode(formsData)}');
-//   }
-//   // print('Sending forms data: ${jsonEncode(formsData)}');
-
-//   try {
-//     var response = await request.send();
-
-//     if (response.statusCode == 200) {
-//       print('Uploaded file path: $fileToUpload');
-//       Utils().toastMessage('Enquiry Created');
-//     } else {
-//       print('Something went wrong. Status code: ${response.statusCode}');
-//       response.stream.transform(utf8.decoder).listen((value) {
-//         print('Response: $value');
-//       });
-//     }
-//   } catch (e) {
-//     print('Error: $e');
-//   }
-// }
-//   Future<void> CattleListing(CattleListModel model) async {
-//   final apiUrl = "http://43.205.23.114/api/method/oymom.api.make_classified";
-
-//   var uri = Uri.parse(apiUrl);
-//   var request = http.MultipartRequest('POST', uri);
-
-//   request.headers['Content-Type'] = 'multipart/form-data';
-
-//   // Add JSON fields
-//   request.fields['data'] = json.encode(model.toJson());
-
-//   // Add file attachments
-//   for (var file in model.classifiedAttachments) {
-//     if (file != null) {
-//       var mimeType = lookupMimeType(file.path) ?? 'application/octet-stream';
-//       var fileStream = http.ByteStream(file.openRead());
-//       var length = await file.length();
-
-//       request.files.add(http.MultipartFile(
-//         'file',
-//         fileStream,
-//         length,
-//         filename: file.path.split('/').last,
-//         contentType: MediaType.parse(mimeType),
-//       ));
-//     }
-//   }
-
-//   var response = await request.send();
-
-//   if (response.statusCode == 200) {
-//     print("Form submitted successfully");
-//   } else {
-//     print('Failed to submit form: ${response.statusCode}');
-//   }
-// }
 
   Future<List<Message>> fetchBanners() async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.get_banner";
