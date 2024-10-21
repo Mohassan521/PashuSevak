@@ -10,6 +10,7 @@ class PharmacyForFarmers extends StatefulWidget {
 class _PharmacyForFarmersState extends State<PharmacyForFarmers> {
   @override
   Widget build(BuildContext context) {
+    print("We are Pakistanis");
     return Scaffold(
       appBar: AppBar(
         title: Text("Nearest Pharmacies", style: TextStyle(color: Colors.white),),

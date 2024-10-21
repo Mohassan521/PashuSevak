@@ -1,4 +1,4 @@
-package com.pashusevak.medication
+package com.pashusevak.app
 
 import io.flutter.embedding.android.FlutterActivity
 
