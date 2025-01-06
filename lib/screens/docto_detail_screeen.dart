@@ -141,6 +141,8 @@ class _DoctorDetailsScreenState extends State<DoctorDetailsScreen> {
                 sid: widget.sid,
                 doctor_name: widget.doctorData['doctor_name'],
                 visit_fees: widget.doctorData['visit_fees'],
+                lat: widget.doctorData['latitude'],
+                lon: widget.doctorData['longitude'],
               );
             },
           ));

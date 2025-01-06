@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pashusevak/models/cattleListModel.dart';
 import 'package:pashusevak/models/getBreedOfCattle.dart';
 import 'package:pashusevak/services/apiServices.dart';
@@ -22,7 +23,6 @@ class _CattleListingFormState extends State<CattleListingForm> {
         "http://43.205.23.114/api/method/oymom.api.get_breed_of_cattle";
 
     var request = await http.get(Uri.parse(url), headers: {
-      'Content-Type': 'application/json',
       'Cookie': 'sid=${widget.sid}',
     });
 
@@ -36,26 +36,22 @@ class _CattleListingFormState extends State<CattleListingForm> {
     }
   }
 
-  List<String> _selectedFiles = [];
+  File? _image;
+  final _picker = ImagePicker();
 
-  Future<void> _pickFiles() async {
-    // Use FilePicker to select multiple files
-    FilePickerResult? result = await FilePicker.platform.pickFiles(
-      type: FileType.custom,
-      allowedExtensions: ['jpg', 'png'],
-      allowMultiple: true
-    );
+  List<File> _selectedFiles = [];
 
-    if (result != null) {
-      _selectedFiles.addAll(result.paths.where((path) => path != null).cast<String>());
-      setState(() {
-         
-      });
-     
-      
+  Future getImage() async {
+    final pickedFile =
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 80);
+
+    if (pickedFile != null) {
+      _image = File(pickedFile.path);
+      _selectedFiles.clear();
+      _selectedFiles.add(_image!);
+      setState(() {});
     } else {
-      // User canceled the picker
-      print('File selection canceled.');
+      print('no image selected');
     }
   }
 
@@ -180,7 +176,7 @@ class _CattleListingFormState extends State<CattleListingForm> {
                           },
                           items: breeds.map((breed) {
                             return DropdownMenuItem<String>(
-                              value: breed.label,
+                              value: breed.value,
                               child: Center(
                                 child: Text(
                                   breed.label,
@@ -622,7 +618,9 @@ class _CattleListingFormState extends State<CattleListingForm> {
                       'Browse',
                       style: TextStyle(color: Colors.white),
                     ),
-                    onPressed: _pickFiles,
+                    onPressed: (){
+                      getImage();
+                    },
                   ),
                   SizedBox(
                     height: 15,
@@ -646,24 +644,38 @@ class _CattleListingFormState extends State<CattleListingForm> {
               ),
               MaterialButton(
                 onPressed: () {
-                  final form = CattleListModel(
-                    sellingProductCategory: productCategory,
-                    typeOfCattle: cattleType!,
-                    cattleBreed: cattleBreed.text,
-                    age: double.tryParse(age.text) ?? 0.0,
-                    noOfHeat: 0,
-                    isOnHeat: isOnHeat,
-                    heatPeriod: heatPeriod,
-                    isOnPregnant: isOnPregnant,
-                    pregnantPeriod: pregantPeriod,
-                    nowMilkPerDay: double.tryParse(milkPerDay.text) ?? 0.0,
-                    milkCapacityPerDay:
-                        double.tryParse(milkCapacityPerDay.text) ?? 0.0,
-                    classifiedAttachments: _selectedFiles,
-                  );
+                  // final form = CattleListModel(
+                  //   sellingProductCategory: productCategory,
+                  //   typeOfCattle: cattleType!,
+                  //   cattleBreed: cattleBreed.text,
+                  //   age: double.tryParse(age.text) ?? 0.0,
+                  //   noOfHeat: 0,
+                  //   isOnHeat: isOnHeat,
+                  //   heatPeriod: heatPeriod,
+                  //   isOnPregnant: isOnPregnant,
+                  //   pregnantPeriod: pregantPeriod,
+                  //   nowMilkPerDay: double.tryParse(milkPerDay.text) ?? 0.0,
+                  //   milkCapacityPerDay:
+                  //       double.tryParse(milkCapacityPerDay.text) ?? 0.0,
+                  //   classifiedAttachments: _selectedFiles,
+                  // );
+
+                  print("After submitting form, here are values: $productCategory, $cattleType, ${cattleBreed.text}, ${double.parse(age.text)},$isOnHeat, $heatPeriod, $isOnPregnant, $pregantPeriod, ${double.parse(milkPerDay.text)},${double.tryParse(milkCapacityPerDay.text) ?? 0.0}, $_selectedFiles");
 
                   NetworkApiServices().CattleListing(
-                      form                   
+                      productCategory,
+                    cattleType!,
+                    cattleBreed.text,
+                    double.tryParse(age.text) ?? 0.0,
+                    0,
+                    isOnHeat,
+                    heatPeriod,
+                    isOnPregnant,
+                    pregantPeriod,
+                    double.tryParse(milkPerDay.text) ?? 0.0,
+                    
+                        double.tryParse(milkCapacityPerDay.text) ?? 0.0,
+                    _selectedFiles,              
                       );
                 },
                 child: Center(child: Text("Submit")),

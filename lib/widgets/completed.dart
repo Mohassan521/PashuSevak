@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
+import 'package:pashusevak/screens/traceAppointment.dart';
 
 class CompletedAnyTask extends StatelessWidget {
   final String message;
   final String sid;
-  const CompletedAnyTask({super.key, required this.message, required this.sid});
+  final double? lat;
+  final double? lon;
+  const CompletedAnyTask({super.key, required this.message, required this.sid, this.lat, this.lon});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +25,7 @@ class CompletedAnyTask extends StatelessWidget {
             height: 10,
           ),
           message == "Appointment Created" ? MaterialButton(onPressed: (){
-
+            Navigator.push(context, MaterialPageRoute(builder: (context) => TraceAppointments(doctor_latitude: lat!, doctor_longitude: lon!,)));
           },
           child: Text("Track Your Appointments"),
           textColor: Colors.white,

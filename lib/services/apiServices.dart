@@ -369,6 +369,26 @@ class NetworkApiServices {
     }
   }
 
+  Future<void> rejectAppointment (String sid, String appointmentName) async {
+    var apiUrl = "http://43.205.23.114/api/method/oymom.api.reject_appointment";
+
+    var request = await http.post(Uri.parse(apiUrl),
+      headers: {
+      'Cookie': 'sid=$sid',
+    },
+    body: {
+      "appointment" : appointmentName
+    }
+    );
+
+    if(request.statusCode == 200){
+      Utils().toastMessage("Appointment Rejected Successfully");
+    }
+    else {
+      print("Something went wrong ${request.statusCode} ${request.reasonPhrase}");
+    }
+  }
+
   Future<void> createEncounter (String sid, String appointment, String medication, String dosage, period, dosageForm, comment, String symptomsName, String? symptomsName2,String diagnosis_name, String? diagnosis_name2,  ) async {
     var apiUrl = "http://43.205.23.114/api/method/oymom.api.create_encounter";
 
@@ -398,28 +418,94 @@ class NetworkApiServices {
     }
   }
 
-  Future<void> CattleListing (CattleListModel form) async {
+  
+Future<void> CattleListing(
+  String sellingProductCategory,
+  String typeOfCattle,
+  String cattleBreed,
+  double age,
+  int noOfHeat,
+  String isOnHeat,
+  String heatPeriod,
+  String isOnPregnant,
+  String? pregnantPeriod,
+  double nowMilkPerDay,
+  double milkCapacityPerDay,
+  List<File>? classifiedAttachments,
+) async {
+  var url = Uri.parse("http://43.205.23.114/api/method/oymom.api.make_classified");
 
-    var url = Uri.parse("http://43.205.23.114/api/method/oymom.api.make_classified");
+  try {
+    // Create a MultipartRequest
+    var request = http.MultipartRequest('POST', url);
+
+    // Add the form data (as a JSON object)
+    Map<String, dynamic> formData = {
+  "forms": {
+    "selling_product_category": sellingProductCategory,
+    "type_of_cattel": typeOfCattle,
+    "cattel_breed": cattleBreed,
+    "age": age.toString(),  // Convert to String
+    "no_of_heat": noOfHeat.toString(),  // Convert to String
+    "is_on_heat": isOnHeat,
+    "heat_period": heatPeriod,
+    "is_on_pregnant": isOnPregnant,
+    "pregnant_period": pregnantPeriod,
+    "now_milk_per_day": nowMilkPerDay.toString(),  // Convert to String
+    "milk_capacity_per_day": milkCapacityPerDay.toString(),  // Convert to String
+    "classifed_attachments": classifiedAttachments!.map((file) => "/files/${file.path.split('/').last}").toList(),
+  }
+};
+
+
+request.fields["forms"] = jsonEncode(formData);
+ // Corrected: Sending as JSON object
+
+    // Add the files to the request
+    if (classifiedAttachments.isNotEmpty) {
+      for (int i = 0; i < classifiedAttachments.length; i++) {
+        File imageFile = classifiedAttachments[i];
+        var stream = http.ByteStream(imageFile.openRead());
+        var length = await imageFile.length();
+        var multipartFile = http.MultipartFile(
+          'classifed_attachments[$i]', stream, length,
+          filename: imageFile.path.split("/").last);
+        request.files.add(multipartFile);
+      }
+    }
+
+    request.headers['Content-Type'] = 'multipart/form-data';
+
+    // Send the request and get the response
+    var response = await request.send();
+
+    // Check if the request was successful
+    var responseBody = await response.stream.bytesToString();
+    print("Response status: ${response.statusCode}");
+    print("Response body after submission: $responseBody");
+
+    // Decode the JSON response
+    var jsonResponse = jsonDecode(responseBody);
     
-    try {
-    final response = await http.post(
-      url,
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: jsonEncode({"forms": form.toJson()}),
-    );
 
+    // Check if the request was successful
     if (response.statusCode == 200) {
-      Utils().toastMessage("Cattle Registered");
+      if (jsonResponse['message']['status'] == 'failed') {
+        String errorMessage = jsonResponse['message']['message'];
+        print("getting this: $errorMessage");
+        print("getting status: ${jsonResponse['message']['status']}");
+        print("request fields: ${request.fields}");
+        Utils().toastMessage("Error: $errorMessage");
+      } else {
+        Utils().toastMessage("Cattle Registered Successfully");
+      }
     } else {
       Utils().toastMessage("Something went wrong, try again");
     }
   } catch (e) {
     print('Error: $e');
   }
-  }
+}
 
 //   Future<void> CattleListing(
 //   String sellingCategory,

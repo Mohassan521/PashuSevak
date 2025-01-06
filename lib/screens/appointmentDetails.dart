@@ -33,15 +33,19 @@ class AppointmentDetailsPage extends StatelessWidget {
                 } else if (snapshot.hasData) {
                   final appointments = snapshot.data!;
                   return Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Padding(
                         padding:
                             EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-                        child: Text(
-                          "Active Appointments ${appointments.length}",
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          child: Text(
+                            "Active Appointments (${appointments.length})",
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),
@@ -54,111 +58,139 @@ class AppointmentDetailsPage extends StatelessWidget {
                           elevation: 1,
                           child: Padding(
                             padding: const EdgeInsets.all(16.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Emergency Appointment',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
-                                SizedBox(height: 8),
-                                Row(
-                                  children: [
-                                    Icon(Icons.access_time, color: Colors.grey),
-                                    SizedBox(width: 8),
-                                    Text(
-                                      '30 minutes to arrive',
-                                      style: TextStyle(
-                                        color: Colors.grey,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                Divider(height: 20, thickness: 0.75),
-                                Text(
-                                  'Booking ID',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  'Dr. Kutkutiya Chenak',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  'Health Status',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  'Bad Health',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                SizedBox(height: 5),
-                                Text(
-                                  'Breed',
-                                  style: TextStyle(
-                                    color: Colors.grey,
-                                  ),
-                                ),
-                                Text(
-                                  'Cow',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                Divider(height: 20, thickness: 0.75),
-                                Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceBetween,
-                                  children: [
-                                    TextButton.icon(
-                                      onPressed: () {},
-                                      icon: Icon(Icons.location_on_outlined,
-                                          color: Colors.black),
-                                      label: Text(
-                                        'Get Location',
-                                        style: TextStyle(color: Colors.black),
-                                      ),
-                                    ),
-                                    ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                        backgroundColor: Color(0xfffe924b),
-                                        shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(20),
+                            child: SizedBox(
+                              height: MediaQuery.sizeOf(context).height * 0.75,
+                              child: ListView.builder(
+                                scrollDirection: Axis.vertical,
+                                itemCount: appointments.length,
+                                itemBuilder: (context, index) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(bottom: MediaQuery.sizeOf(context).height * 0.05),
+                                    child: Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        '${appointments[index].appointmentType} Appointment',
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.bold,
                                         ),
                                       ),
-                                      onPressed: () {},
-                                      child: Row(
+                                      SizedBox(height: 8),
+                                      Divider(height: 20, thickness: 0.75),
+                                      Text(
+                                        'Booking ID',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        appointments[index].name,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Appointment Date & Time',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        "${appointments[index].appointmentDate} ${appointments[index].appointmentTime}",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Patient Name',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        appointments[index].patientName,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Service Unit',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        appointments[index].serviceUnit,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                        ),
+                                      ),
+                                      SizedBox(height: 5),
+                                      Text(
+                                        'Status',
+                                        style: TextStyle(
+                                          color: Colors.grey,
+                                        ),
+                                      ),
+                                      Text(
+                                        appointments[index].status,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 16,
+                                          color: appointments[index].status == "Open" ? Colors.green : Colors.red
+                                        ),
+                                      ),
+                                      Divider(height: 20, thickness: 0.75),
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.end,
                                         children: [
-                                          Text(
-                                            'Confirm',
-                                            style:
-                                                TextStyle(color: Colors.white),
-                                          ),
-                                          Icon(
-                                            Icons.arrow_forward,
-                                            color: Colors.white,
-                                          ),
+                                          // TextButton.icon(
+                                          //   onPressed: () {},
+                                          //   icon: Icon(Icons.location_on_outlined,
+                                          //       color: Colors.black),
+                                          //   label: Text(
+                                          //     'Get Location',
+                                          //     style: TextStyle(color: Colors.black),
+                                          //   ),
+                                          // ),
+                                          appointments[index].status == "Open" ? ElevatedButton(
+                                            
+                                            style: ElevatedButton.styleFrom(
+                                              backgroundColor: Color(0xfffe924b),
+                                              shape: RoundedRectangleBorder(
+                                                borderRadius:
+                                                    BorderRadius.circular(20),
+                                              ),
+                                            ),
+                                            onPressed: () {
+                                              NetworkApiServices().rejectAppointment(sid, appointments[index].name);
+                                            },
+                                            child: Row(
+                                              children: [
+                                                Text(
+                                                  'Reject',
+                                                  style:
+                                                      TextStyle(color: Colors.white),
+                                                ),
+                                              ],
+                                            ),
+                                          ) : Text("Appointment already rejected"),
                                         ],
                                       ),
-                                    ),
-                                  ],
-                                ),
-                              ],
+                                    ],
+                                                                    ),
+                                  );
+                              
+                                }),
                             ),
                           ),
                         ),
@@ -173,38 +205,38 @@ class AppointmentDetailsPage extends StatelessWidget {
             SizedBox(
               height: 15,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
-              child: Text(
-                "Completed Appointments",
-                style: TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15),
-              child: Column(
-                children: [
-                  CompletedAppointments(
-                    image: "assets/images/docAvatar.png",
-                    appointmentStatus: "Emergency Appointment",
-                    address: "Gujrat India, 10C",
-                  ),
-                  CompletedAppointments(
-                    image: "assets/images/docAvatar.png",
-                    appointmentStatus: "Emergency Appointment",
-                    address: "Gujrat India, 10C",
-                  ),
-                  CompletedAppointments(
-                    image: "assets/images/docAvatar.png",
-                    appointmentStatus: "Emergency Appointment",
-                    address: "Gujrat India, 10C",
-                  )
-                ],
-              ),
-            )
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 10, vertical: 15),
+            //   child: Text(
+            //     "Completed Appointments",
+            //     style: TextStyle(
+            //       fontSize: 16,
+            //       fontWeight: FontWeight.bold,
+            //     ),
+            //   ),
+            // ),
+            // Padding(
+            //   padding: const EdgeInsets.symmetric(horizontal: 15),
+            //   child: Column(
+            //     children: [
+            //       CompletedAppointments(
+            //         image: "assets/images/docAvatar.png",
+            //         appointmentStatus: "Emergency Appointment",
+            //         address: "Gujrat India, 10C",
+            //       ),
+            //       CompletedAppointments(
+            //         image: "assets/images/docAvatar.png",
+            //         appointmentStatus: "Emergency Appointment",
+            //         address: "Gujrat India, 10C",
+            //       ),
+            //       CompletedAppointments(
+            //         image: "assets/images/docAvatar.png",
+            //         appointmentStatus: "Emergency Appointment",
+            //         address: "Gujrat India, 10C",
+            //       )
+            //     ],
+            //   ),
+            // )
           ],
         ),
       ),
